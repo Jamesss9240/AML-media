@@ -1,0 +1,26 @@
+{
+  "name": "aml-media",
+  "version": "1.0.0",
+  "description": "aml media library website",
+  "main": "database-connection.js",
+  "scripts": {
+    "test": "test1",
+    "start": "http-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jamesss9240/AML-media.git"
+  },
+  "keywords": [
+    "media"
+  ],
+  "author": "James,Ethan,Tasnim,harvey",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/Jamesss9240/AML-media/issues"
+  },
+  "homepage": "https://github.com/Jamesss9240/AML-media#readme",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
