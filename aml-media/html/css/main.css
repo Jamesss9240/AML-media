@@ -1,0 +1,27 @@
+#carousel-container{
+    
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    background-color: purple;
+   
+}
+#carousel-container img{
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    max-width: 600px;
+}
+.loginbtn{
+    display: flex;
+    justify-content: center;
+    background-color: blueviolet;
+    padding: 20px;
+    color: rgb(255, 255, 255);
+    text-decoration: none; 
+    font-size: larger;
+}
+.loginbtn:hover{
+    text-decoration: underline;
+    background-color: rgb(119, 23, 209);
+}
