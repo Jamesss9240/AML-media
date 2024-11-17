@@ -9,10 +9,19 @@
         <link rel="stylesheet" href="">
     </head>
     <body>
-      <p>test 4</p>
+  
+      <div id="nav"></div>
+      <p>main page</p>
         
        
     </body>
 </html>
-<script src="https://cdn.jsdelivr.net/npm/pouchdb@7.0.0/dist/pouchdb.min.js"></script>
-<script src="database-connection.js"></script>
+<script
+src="https://code.jquery.com/jquery-3.7.1.min.js"
+integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+crossorigin="anonymous"></script>
+    <script>
+      $(function(){
+      $("#nav").load("nav.html");
+    });
+    </script>
