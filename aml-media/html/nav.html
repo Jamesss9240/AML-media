@@ -1,42 +1,173 @@
 <style>
-    .navbar{
-      background-color: blueviolet;
-      color: aliceblue;
-      padding: 30px;
-      margin: 0%;
-    }
-    body{
+  
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,500;0,600;1,400;1,600&display=swap');
+  
+      .navbarr{
+        background-color: blueviolet;
+        color: aliceblue;
+        padding: 30px;
+        margin: 0%;
+      }
+  
+      body{
+        margin: 0;
+        padding: 0;
+      }
+  
+      ul{
+        list-style: none;
+        display: flex;
+        font-size: larger;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+  
+      ul.hover{
+        background-color: var(--dark-color) ;
+      }
+  
+      .navv{
+          display: flex;
+          flex-direction: row;  
+      }
+  
+      .innerr-list li{
+        margin: 0px 10px 0px 10px;
+      }
+  
+  :root{
+      --orange:#8b11a3;
+      --dark-color:#810c72;
+      --black:#444;
+      --light-color:#666;
+      --border:0.1rem solid rgba(0,0,0,0.1);
+      --border-hover:0.1rem solid var(--black);
+      --box-shadow:0 0.5rem 1rem rgba(0,0,0,0.1);
+  }
+  
+  *{
       margin: 0;
       padding: 0;
-    }
-    ul{
-      list-style: none;
+      font-family: 'Poppins', sans-serif;
+      box-sizing: border-box;
+      outline: none;
+      border: none;
+      text-decoration: none;
+      text-transform: capitalize;
+      transition: all .2s linear;
+      transition: width none;
+  }
+  
+  html{
+      font-size: 62.5%;
+      overflow-X: hidden;
+      scroll-padding-top: 5rem;
+      scroll-behavior: smooth;
+  }
+  
+  html::-webkit-scrollbar{
+      width: 1rem;
+  }
+  
+  html::-webkit-scrollbar-track{
+      background: transparent;
+  }
+  
+  html::-webkit-scrollbar-thumb{
+      background: var(--black);
+  }
+  
+  .header .header-1{
       display: flex;
-      flex-direction: row;
+      align-items: center;
       justify-content: space-between;
-    }
-    .nav{
-        display: flex;
-        flex-direction: row;
-        
-       
-    }
-    .inner-list li{
-      margin: 0px 10px 0px 10px;
-    }
-
-</style>
-<div class="navbar">
-    <ul class="nav">
-        <li>logo</li>
-        <li><ul class="inner-list">
-            <li>home</li>
-            <li>genre</li>
-            <li>locations</li>
-            <li>search bar</li>
-            <li>contact us</li>
-        </ul>
-    </li>
-    <li>sign in/register</li>
-    </ul>
-</div>
+      padding: 1.5rem 9%;
+      background: #ffffff;
+  }
+  
+  .header .header-1 .logo{
+      font-size: 2.5rem;
+      font-weight: bolder;
+      color: var(--black);
+  }
+  
+  .header .header-1 .logo i{
+      color: var(--purple);
+  
+  }
+  
+  .header .header-1 .search-form{
+      width: 50rem;
+      height: 5rem;
+      border: var(--border);
+      overflow: hidden;
+      background-color: #ffffff;
+      display: flex;
+      align-items: center;
+      border-radius: 0.5rem;
+  }
+  
+  .header .header-1 .search-form input{
+      font-size: 1.6rem;
+      padding: 0 1.2rem;
+      height: 100%;
+      width: 100%;
+      text-transform: none;
+      color: var(--black);
+  }
+  
+  .header .header-1 .search-form label{
+      font-size: 2.5rem;
+      padding-right: 1.5rem;
+      color: var(--black);
+      cursor: pointer;
+  }
+  
+  .header .header-1 .icons div,
+  .header .header-1 .icons a{
+      font-size: 2.5rem;
+      margin-left: 1.5rem;
+      color: var(--black);
+      cursor: pointer;
+  }
+  
+  #search-btn{
+      display: none;
+  }
+  
+  </style>
+  
+  <header class="header">
+  
+    <div class="header-1">
+  
+        <a href="" class="logo"><i class="fas fa-book">AML Library</i></a>
+  
+        <form action="" class="search-form">
+            <input type="search" name="" placeholder="search here for book..." id="search-box">
+            <label for="search-box" class="fas fa-search"></label>
+        </form>
+  
+        <div class="icons">
+            <div id="search-btn" class="fas fa-search"></div>
+            <a href="" class="fas fa-heart"></a>
+            <a href="" class="fas fa-shopping-cart"></a>
+            <div id="login-btn" class="fas fa-user"></div>
+        </div>
+  
+    </div>
+  
+  <div class="navbarr">
+      <ul class="navv">
+          <li></li>
+          <li><ul class="innerr-list">
+              <li>home</li>
+              <li>genre</li>
+              <li>locations</li>
+              <li>search bar</li>
+              <li>contact us</li>
+          </ul>
+      </li>
+      <li>sign in/register</li>
+      </ul>
+  </div>
