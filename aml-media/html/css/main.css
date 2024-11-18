@@ -4,8 +4,15 @@
     display: flex;
     justify-content: center;
     background-color: purple;
-   
+    list-style: none    ;
 }
+.carousel-item{
+    transition: -webkit-transform .8s ease;
+    transition: transform .8s ease;
+    transition: transform .8s ease,-webkit-transform .8s ease;
+   
+
+} 
 #carousel-container img{
     margin: auto;
     display: flex;
