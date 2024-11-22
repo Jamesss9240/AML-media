@@ -1,0 +1,41 @@
+{{ template "header.html" .}}
+<body>
+    <div class="d-flex justify-content-center">
+        <div class="card text-center" data-bs-theme="dark">
+            <div class="card-header">Profile</div>
+            <div class="card-body">
+                <div class="flex-column d-flex">
+                  <!--If there's an error, display the error-->
+                  {{ if .ErrorTitle}}
+                  <p class="bg-danger">
+                    {{.ErrorTitle}}: {{.ErrorMessage}}
+                  </p>
+                  {{end}}
+                  <form class="form d-flex flex-column align-items-center" action="/u/personal-details" method="POST">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">First Name</span>
+                        <input id="msg" type="text" class="form-control" name="firstname" value="{{.fname}}" placeholder="First Name">
+                      </div>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text">Last Name</span>
+                        <input id="msg" type="text" class="form-control" name="lastname" value="{{.lname}}" placeholder="Last Name">
+                      </div>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text">Email</span>
+                        <input id="msg" type="text" class="form-control" name="email" value="{{.email}}" placeholder="Email">
+                      </div>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text">DOB</span>
+                        <input class="form-control" type="date" name="date" value="{{.date}}" onfocus="(this.type='date')"/>
+                      </div>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text">Text</span>
+                        <input id="msg" type="password" class="form-control" name="password" placeholder="Password">
+                      </div>
+                      <button type="submit" class="btn btn-primary text-light" style="background-color: #9260e0; margin-top: 16px;">Update Details</button>
+                    </form>
+              </div>
+            </div>
+        </div>
+    </div>
+{{ template "footer.html" .}}

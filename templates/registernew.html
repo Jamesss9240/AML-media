@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.3.2/jsencrypt.min.js"></script>
+</head>
+<body>
+    <!--If there's an error, display the error-->
+    {{ if .ErrorTitle}}
+    <p class="bg-danger">
+        {{.ErrorTitle}}: {{.ErrorMessage}}
+    </p>
+    {{end}}
+    <form id="register-form">
+        <label for="firstname">Firstname:</label>
+        <input type="text" id="firstname" name="firstname" required><br><br>
+        <label for="lastname">Lastname:</label>
+        <input type="text" id="lastname" name="lastname" required><br><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+        <button type="submit" onclick="formSubmit()">Register</button>
+    </form>
+
+    <script>
+        // document.addEventListener('DOMContentLoaded', function() { console.log('DOM fully loaded and parsed');
+        // document.getElementById('register-form').addEventListener('submit', formSubmit);
+    // });
+    async function formSubmit() {
+            console.log('form event submit');
+            event.preventDefault();
+            const firstname = document.getElementById('firstname').value;
+            const lastname = document.getElementById('lastname').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Encrypt the password using the server's public key
+            const encrypt = new JSEncrypt();
+            encrypt.setPublicKey(`-----BEGIN RSA PUBLIC KEY-----MIIBCgKCAQEAqy3b5RNVsvXkDOfFpZbWx5Ebw1BTMQVJ9LHQ8mhZzn8G5bBQkyKVHdfow0Pfg6zA/QTQGVynQvKQHiTNkiKn3Q6L8FEl4wr868AmhKSoWqCn19n9SFudc4oP3hbw/QTeqG+r0Vn7rjlm8AfUo2ZTvWUIgIJTkG4V3ghJwBF0p3U3h3Px+R7zqrmDnzXpZQfyrI+adoPgZ/hE46HfH8B1wNA0S2KhICwGZ9TSKzBSdnbVuzF0uSyXfPl1AQuZzA9N8shDX2e7qwNQjMuJhuB+xwnHieNYwMrf2+BU8HXPdkGXm0//+HO0fIgCtj7ZZBRyYUxniIGcRsnINnmqedYY6wIDAQAB-----END RSA PUBLIC KEY-----`);
+            const encryptedPassword = encrypt.encrypt(password);
+
+            // Create the payload
+            const payload = {
+                firstname: firstname,
+                lastname:lastname,
+                email: email,
+                password: encryptedPassword
+            };
+
+            // Send the POST request
+            const response = await fetch('/u/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+            console.log(data);
+        }
+    </script>
+</body>
+</html>
