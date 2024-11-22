@@ -10,6 +10,9 @@ func Render(c *gin.Context, data gin.H, templateName string) {
 	loggedInInterface, e := c.Get("authenticated")
 	if e {
 		data["authenticated"] = loggedInInterface.(bool)
+		if loggedInInterface.(bool) {
+			log.Debug("User is authenticated")
+		}
 	}
 
 	switch c.Request.Header.Get("Accept") {

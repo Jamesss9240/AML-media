@@ -26,7 +26,14 @@ func main() {
 	// from the disk again. This makes serving HTML pages very fast.
 	router.LoadHTMLGlob("templates/*")
 	router.Static("/static", "./static/")
+	router.StaticFile("/favicon.ico", "./static/favicon.ico")
+	// s.Use(func(ctx *gin.Context) {
+	// 	ctx.
+	// })
 	routes.InitialiseRoutes(router)
+	router.NoRoute(func(c *gin.Context) {
+		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
+	})
 	// Start serving the application
 	// go router.Run("127.0.0.1:8080")
 	go router.RunTLS("127.0.0.1:8080", "./cert.pem", "./mykey.pem")

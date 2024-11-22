@@ -171,16 +171,20 @@ func logout(c *gin.Context) {
 	_, err := c.Cookie("token")
 	if err != nil {
 		log.Error("Logout cookie get", zap.Error(err))
-		c.SetCookie("token", "", -1, "", "", false, true)
+		c.SetCookie("token", "", -1, "", "localhost", true, true)
 		c.Redirect(http.StatusTemporaryRedirect, "/")
 		return
 	}
-	c.SetCookie("token", "", -1, "", "", false, true) // Clear the cookie
-	c.Redirect(http.StatusTemporaryRedirect, "/")     // Redirect to the home page
+	c.SetCookie("token", "", -1, "", "localhost", true, true) // Clear the cookie
+	c.Redirect(http.StatusTemporaryRedirect, "/")             // Redirect to the home page
 }
 
 func showRegistrationPage(c *gin.Context) {
 	Render(c, gin.H{"title": "Register"}, "register.html")
+}
+
+func showSignupPage(c *gin.Context) {
+	Render(c, nil /*gin.H{"title": "Signup"}*/, "signup.html")
 }
 
 func showNewRegistrationPage(c *gin.Context) {

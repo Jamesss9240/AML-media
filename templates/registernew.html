@@ -26,9 +26,6 @@
     </form>
 
     <script>
-        // document.addEventListener('DOMContentLoaded', function() { console.log('DOM fully loaded and parsed');
-        // document.getElementById('register-form').addEventListener('submit', formSubmit);
-    // });
     async function formSubmit() {
             console.log('form event submit');
             event.preventDefault();
@@ -36,6 +33,26 @@
             const lastname = document.getElementById('lastname').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            if (firstname == "") {
+                console.log("fname empty");
+                document.getElementById('firstname').style.borderColor = "red";
+                // return;
+            }
+            if (lastname == "") {
+                console.log("lname empty")
+                document.getElementById('lastname').style.borderColor = "red";
+                // return;
+            }
+            if (email=="") {
+                console.log("email empty")
+                document.getElementById('email').style.borderColor = "red";
+                // return;
+            }
+            if (password == "") {
+                console.log("pass empty")
+                document.getElementById('password').style.borderColor = "red";
+                return;
+            }
 
             // Encrypt the password using the server's public key
             const encrypt = new JSEncrypt();

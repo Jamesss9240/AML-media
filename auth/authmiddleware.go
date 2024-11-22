@@ -91,7 +91,26 @@ func EnsureNotLoggedIn() gin.HandlerFunc {
 		if e {
 			loggedIn := loggedInInterface.(bool)
 			if loggedIn { // abort if logged in
-				c.AbortWithStatus(http.StatusUnauthorized)
+				log.Info("Redirecting to /")
+				c.Redirect(http.StatusTemporaryRedirect, "/") //AbortWithStatus(http.StatusUnauthorized)
+			}
+		}
+		t, err := c.Cookie("token")
+		if err != nil {
+			log.Error("Error getting cookie", zap.Error(err))
+			return
+		}
+		if valid, err := CheckJWT(t); err != nil {
+			log.Error("User not authenticated", zap.Error(err))
+			if !valid {
+				log.Info("Token invalid, potential tampering?")
+			}
+			return
+		} else {
+			if valid {
+				log.Info("User is authenticated")
+			} else {
+				log.Info("Token invalid, potential tampering?")
 			}
 		}
 	}
@@ -100,7 +119,7 @@ func EnsureNotLoggedIn() gin.HandlerFunc {
 // Set whether use is logged in or not
 func SetUserStatus() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		fmt.Println("WHEN IS THIS USED?")
+		fmt.Println("WHEN IS THIS USED?, ok I remember here we can check the token constantly and award a new token if the user wants to extend their time using the system, we must make sure it isn't reawarded after a huge amount of time")
 		// if token, err := c.Cookie("token"); err == nil || token != "" {
 		// 	t, _, err := db.QueryTokenExists(token)
 		// 	if err != nil {

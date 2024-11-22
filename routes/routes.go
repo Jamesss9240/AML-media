@@ -14,16 +14,17 @@ func InitialiseRoutes(router *gin.Engine) {
 	router.GET("/", ShowIndexPage)   // Handle the index route
 	userRoutes := router.Group("/u") // User group
 	{
-		userRoutes.GET("/login", auth.EnsureNotLoggedIn(), showLoginPage)
+		// userRoutes.GET("/login", auth.EnsureNotLoggedIn(), showLoginPage)
+		// userRoutes.POST("/login", auth.EnsureNotLoggedIn(), performLogin)
+		userRoutes.GET("/login", auth.EnsureNotLoggedIn(), showNewLoginPage)
 		userRoutes.POST("/login", auth.EnsureNotLoggedIn(), performLogin)
-		userRoutes.GET("/loginnew", auth.EnsureNotLoggedIn(), showNewLoginPage)
-		userRoutes.POST("/loginnew", auth.EnsureNotLoggedIn(), performLogin)
 		userRoutes.GET("/logout", auth.EnsureAuthenticatedLoggedIn(), logout)
-		userRoutes.GET("/register", auth.EnsureNotLoggedIn(), showNewRegistrationPage)
+		userRoutes.GET("/signup", auth.EnsureNotLoggedIn(), showSignupPage)
+		// userRoutes.GET("/register", auth.EnsureNotLoggedIn(), showNewRegistrationPage)
 		userRoutes.POST("/register", auth.EnsureNotLoggedIn(), register)
-		userRoutes.GET("/personal-details", auth.EnsureAuthenticatedLoggedIn(), showPersonalDetails)
-		userRoutes.POST("/personal-details", auth.EnsureAuthenticatedLoggedIn(), updatePersonalDetails)
-		userRoutes.GET("/profile", auth.EnsureAuthenticatedLoggedIn(), showProfile)
+		// userRoutes.GET("/personal-details", auth.EnsureAuthenticatedLoggedIn(), showPersonalDetails)
+		// userRoutes.POST("/personal-details", auth.EnsureAuthenticatedLoggedIn(), updatePersonalDetails)
+		// userRoutes.GET("/profile", auth.EnsureAuthenticatedLoggedIn(), showProfile)
 	}
 	// logRoutes := router.Group("/personal-log") // log group
 	//
