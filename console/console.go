@@ -31,7 +31,7 @@ func Console() {
 		case "panic":
 			panic("panicked, you told me to :)")
 		case "version":
-			log.Println("Version: 1.0")
+			log.Println("Version: 1.1" + "build: " + Hash())
 		default:
 			log.Println("Unknown command")
 		}

@@ -50,25 +50,6 @@ type User struct {
 // 	fmt.Printf("User inserted with revision %s\n", rev)
 // }
 
-// func CDBGetUsername() {
-// 	client, err := kivik.New("couch", "http://localhost:5984/")
-// 	if err != nil {
-// 		panic(err)
-// 	}
-
-// 	db := client.DB("users")
-// 	doc := db.Get(context.TODO(), "ejh@gmail.com")
-// 	At, err := doc.Attachments()
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	if k, e := At.Next(); e != nil {
-// 		fmt.Println(k.Content)
-// 	}
-// 	client.Close()
-// 	// doc.ScanDoc() // needs struct tags!
-// }
-
 func CDBGetUserByEmail(email string) (*User, error) {
 	var TU *User
 	client, err := kivik.New("couch", "http://admin:Dexter233@localhost:5984/")
@@ -96,17 +77,6 @@ func CDBGetUserByEmail(email string) (*User, error) {
 	return TU, nil
 }
 
-// func CDBCheckPassword(email string, password string) bool {
-// 	U, err := CDBGetUserByEmail(email)
-// 	if err != nil {
-// 		log.Error("Error getting user information", zap.Error(err))
-// 	}
-// 	if U.Password == password {
-// 		return true
-// 	}
-// 	return false
-// }
-
 func CDBRegisterUser(email string, firstname string, lastname string, password string) error {
 	client, err := kivik.New("couch", "http://admin:Dexter233@localhost:5984/")
 	if err != nil {
@@ -119,10 +89,8 @@ func CDBRegisterUser(email string, firstname string, lastname string, password s
 		log.Error("Error while attempting to get user during registration", zap.Error(err))
 	}
 	if User != nil {
-		// if User.Email == email {
 		log.Error("User already exists")
 		return errors.New(ErrUserAlreadyExists)
-		// }
 	}
 
 	doc := map[string]interface{}{
@@ -132,12 +100,10 @@ func CDBRegisterUser(email string, firstname string, lastname string, password s
 		"password":  password,
 	}
 	docid, rev, err := db.CreateDoc(context.TODO(), doc)
-	// rev, err := db.Put(context.Background(), "", doc)
 	if err != nil {
 		log.Error("Registration CDB Failed", zap.Error(err))
 		return err
 	}
 	log.Info("User registered", zap.String("docid", docid), zap.String("revid", rev))
-	// fmt.Printf("User inserted with revision %s\n", rev)
 	return nil
 }
