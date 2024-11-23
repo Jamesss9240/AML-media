@@ -34,29 +34,31 @@ var log = logaml.Log
 func EnsureAuthenticatedLoggedIn() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Check if user is logged in
-		loggedInInterface, exists := c.Get("authenticated")
-		if !exists {
-			c.Set("authenticated", false)
-			c.HTML(http.StatusUnauthorized, "login.html", gin.H{
-				"ErrorTitle":   "You need to login to access this content!",
-				"ErrorMessage": "Login or create an account below"})
-			c.AbortWithStatus(http.StatusUnauthorized)
-		}
-		loggedIn := loggedInInterface.(bool)
-		if !loggedIn { // if not abort
-			c.HTML(http.StatusBadRequest, "login.html", gin.H{
-				"ErrorTitle":   "Login Failed",
-				"ErrorMessage": "Invalid credentials provided"})
-			c.Abort()
-			return
-		}
+		// loggedInInterface, exists := c.Get("authenticated")
+		// if !exists {
+		//	log.Info("context authenticated doesn't exist")
+		// 	c.Set("authenticated", false)
+		// 	c.HTML(http.StatusUnauthorized, "login.html", gin.H{
+		// 		"ErrorTitle":   "You need to login to access this content!",
+		// 		"ErrorMessage": "Login or create an account below"})
+		// 	c.AbortWithStatus(http.StatusUnauthorized)
+		// } else {
+		// 	loggedIn := loggedInInterface.(bool)
+		// 	log.Info("Login status", zap.Bool("loggedIn", loggedIn))
+		// 	if !loggedIn { // if not abort
+		// 		c.HTML(http.StatusBadRequest, "login.html", gin.H{
+		// 			"ErrorTitle":   "Login Failed",
+		// 			"ErrorMessage": "Invalid credentials provided"})
+		// 		c.Abort()
+		// 		return
+		// 	}
 		t, err := c.Cookie("token") // Get cookie
 		if err != nil {
 			c.Set("authenticated", false)
 			c.HTML(http.StatusUnauthorized, "login.html", gin.H{
 				"ErrorTitle":   "Login Failed",
 				"ErrorMessage": "Invalid credentials provided"})
-			c.AbortWithStatus(401)
+			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
 		if auth, err := CheckJWT(t); err == nil {
@@ -68,7 +70,7 @@ func EnsureAuthenticatedLoggedIn() gin.HandlerFunc {
 				c.HTML(http.StatusUnauthorized, "login.html", gin.H{
 					"ErrorTitle":   "Login Failed",
 					"ErrorMessage": "Invalid credentials provided"})
-				c.AbortWithStatus(401)
+				c.AbortWithStatus(http.StatusUnauthorized)
 				return
 			}
 		} else {
@@ -77,11 +79,13 @@ func EnsureAuthenticatedLoggedIn() gin.HandlerFunc {
 			c.HTML(http.StatusUnauthorized, "login.html", gin.H{
 				"ErrorTitle":   "Login Failed",
 				"ErrorMessage": "Invalid credentials provided"})
-			c.AbortWithStatus(401)
+			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
 	}
 }
+
+// }
 
 // Ensure user is not logged in
 func EnsureNotLoggedIn() gin.HandlerFunc {

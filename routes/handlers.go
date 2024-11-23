@@ -24,7 +24,7 @@ type JSONUserRegistration struct {
 }
 
 func showLoginPage(c *gin.Context) {
-	Render(c, gin.H{"title": "AML - Login"}, "loginnew.html")
+	Render(c, gin.H{"title": "AML - Login"}, "login.html")
 }
 
 func showSignupPage(c *gin.Context) {
@@ -118,6 +118,7 @@ func performLogin(c *gin.Context) {
 		log.Info("Form data", zap.String("email", JUL.Email), zap.String("password", JUL.Password))
 		c.SetCookie("token", token, 3600, "", "localhost", true, true)
 		c.Set("authenticated", true)
+		c.JSON(http.StatusOK, gin.H{"message": "Login request was successful!"})
 	}
 }
 
@@ -232,6 +233,7 @@ func performSignup(c *gin.Context) {
 		}
 		c.SetCookie("token", token, 3600, "", "localhost", true, true)
 		c.Set("authenticated", true)
+		c.JSON(http.StatusOK, gin.H{"message": "Signup request was successful!"})
 	} else {
 		c.Set("authenticated", false)
 		log.Error("Error registering", zap.Error(err))
