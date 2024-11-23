@@ -97,22 +97,3 @@ func DecryptPassword(encryptedPassword string) (string, error) {
 	}
 	return "", errors.New(ErrNoPasswordProvided)
 }
-
-// func main() {
-//     // Load the private key from the PEM file
-//     privateKey, err := loadPrivateKey("private_key.pem")
-//     if err != nil {
-//         log.Fatalf("failed to load private key: %v", err)
-//     }
-
-//     // Example encrypted password (base64-encoded)
-//     encryptedPassword := "BASE64_ENCRYPTED_PASSWORD"
-
-//     // Decrypt the password
-//     decryptedPassword, err := decryptPassword(encryptedPassword, privateKey)
-//     if err != nil {
-//         log.Fatalf("failed to decrypt password: %v", err)
-//     }
-
-//     fmt.Printf("Decrypted password: %s\n", decryptedPassword)
-// }

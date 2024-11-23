@@ -7,6 +7,7 @@ import (
 	"AML/db"
 	"AML/logaml"
 	"AML/routes"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -33,6 +34,9 @@ func main() {
 	routes.InitialiseRoutes(router)
 	router.NoRoute(func(c *gin.Context) {
 		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
+	})
+	router.GET("/success", func(c *gin.Context) {
+		c.String(http.StatusOK, "Post request was successful!")
 	})
 	// Start serving the application
 	// go router.Run("127.0.0.1:8080")

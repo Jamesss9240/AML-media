@@ -1,35 +1,78 @@
-{{ template "header.html" .}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.3.2/jsencrypt.min.js"></script>
+  <script type="text/javascript" src="validation.js" defer></script>
+</head>
 <body>
-<div class="container mt-5 mb-5 d-flex align-items-center justify-content-center flex-column">
-    <div class="card text mb-3 bg-dark text-light" style="max-width: 18rem;">
-        <div class="card-header">Log in</div>
-        <div class="card-body">
-            <h5 class="card-title">Please enter your log in details</h5>
-            <!--If there's an error, display the error-->
-            {{ if .ErrorTitle}}
-            <p class="bg-danger">
-                {{.ErrorTitle}}: {{.ErrorMessage}}
-            </p>
-            {{end}}
-            <form class="form d-flex flex-column align-items-center" action="/u/login" method="POST">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="text" class="form-control" id="email" name="email" placeholder="Email">
-                  </div>
-                  <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
-                  </div>
-                <button type="submit" class="btn btn-primary text-light" style="background-color: #9260e0; margin-top: 16px;">Login</button>
-            </form>
-        </div>
+  <div class="wrapper">
+    <h1>Login</h1>
+    <p id="error-message"></p>
+    <form id="form">
+      <div>
+        <label for="email-input">
+          <span>@</span>
+        </label>
+        <input type="email" name="email" id="email-input" placeholder="Email">
       </div>
-        <div class="container mt-5">
-            <div class="row">
-                <div class="col-md-6 mx-auto">
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-{{ template "footer.html" .}}
+      <div>
+        <label for="password-input">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240Zm240-200q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80Z"/></svg>
+        </label>
+        <input type="password" name="password" id="password-input" placeholder="Password">
+      </div>
+      <button type="submit" onclick="formSubmit()">Login</button>
+      <p style="padding:20px;">New here? <a href="signup.html">Create an Account</a></p>
+    </form>
+    <script>
+      async function formSubmit() {
+        console.log('form event submit');
+        event.preventDefault();
+        const email = document.getElementById('email-input').value;
+        const password = document.getElementById('password-input').value;
+        if (!email) {
+          console.log("email empty")
+          document.getElementById('email-input').style.borderColor = "red";
+        }
+        if (!password) {
+          console.log("pass empty")
+          document.getElementById('password-input').style.borderColor = "red";
+        }
+        if(!email || !password){
+          console.log("Invalid entries")
+          return;
+        }
+        // Encrypt the password using the server's public key
+        const encrypt = new JSEncrypt();
+        fetch('/static/public_key.pem').then(response => response.text()).then(async key => {
+          encrypt.setPublicKey(key);
+          const encryptedPassword = encrypt.encrypt(password);
+          // Create the payload
+          const payload = {
+            email: email,
+            password: encryptedPassword
+          };
+        // Send the POST request
+        const response = await fetch('/u/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        }).then(response => response.json())
+            .then(data => {
+              console.log(data);
+                if (data.message === "Login request was successful!") {
+                    window.location.href = "/success";
+              }
+            }).catch(error => console.error("Error:", error));
+          }).catch(error => console.error('Error fetching the key:', error));
+        }
+      </script>
+  </div>
+</body>
+</html>

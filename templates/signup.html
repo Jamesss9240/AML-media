@@ -104,13 +104,15 @@
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload)
-      });
-      const data = await response.json();
-      console.log(data);
-      console.log(key);
+      }).then(response => response.json())
+        .then(data => {
+          console.log(data);
+            if (data.message === "Signup request was successful!") {
+              window.location.href = "/success";
+            }
+        }).catch(error => console.error("Error:", error));
       }).catch(error => console.error('Error fetching the key:', error));
-            // encrypt.setPublicKey(`-----BEGIN RSA PUBLIC KEY-----MIIBCgKCAQEAqy3b5RNVsvXkDOfFpZbWx5Ebw1BTMQVJ9LHQ8mhZzn8G5bBQkyKVHdfow0Pfg6zA/QTQGVynQvKQHiTNkiKn3Q6L8FEl4wr868AmhKSoWqCn19n9SFudc4oP3hbw/QTeqG+r0Vn7rjlm8AfUo2ZTvWUIgIJTkG4V3ghJwBF0p3U3h3Px+R7zqrmDnzXpZQfyrI+adoPgZ/hE46HfH8B1wNA0S2KhICwGZ9TSKzBSdnbVuzF0uSyXfPl1AQuZzA9N8shDX2e7qwNQjMuJhuB+xwnHieNYwMrf2+BU8HXPdkGXm0//+HO0fIgCtj7ZZBRyYUxniIGcRsnINnmqedYY6wIDAQAB-----END RSA PUBLIC KEY-----`);
-      }
+    }
     </script>
   </div>
 </body>
