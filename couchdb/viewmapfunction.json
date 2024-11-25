@@ -1,0 +1,1 @@
+"map": "function(doc) { if (doc.type === 'media' && doc.title && doc.title.toLowerCase().includes('book')) { emit(doc._id, doc); } }"
