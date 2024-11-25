@@ -59,8 +59,54 @@
         </div>
       </div>
       <div class="booklist">
-        <!-- booklist goes here, but database is needed first for this -->
+        <div id="media-container"></div>
+        <div class="view-selector">
+          <label for="view-select">Choose a view:</label>
+          <select id="view-select" onchange="changeView(this.value)">
+            <option value="all_media">All Media View</option>
+            <option value="books">Books View</option>
+          </select>
+        </div>
+        <script>
+          async function loadMedia(filter = '') {
+            try {
+              console.log(`Loading media with filter: ${filter}`);
+              const response = await fetch(`http://localhost:3000/media?filter=${filter}`);
+              const data = await response.json();
+              console.log('Data received:', data);
+  
+              if (!data.rows) {
+                throw new Error('Invalid data format received');
+              }
+  
+              const mediaContainer = document.getElementById('media-container');
+              mediaContainer.innerHTML = ''; // Clear previous content
+              data.rows.forEach(row => {
+                const media = row.value;
+                const mediaElement = document.createElement('div');
+                mediaElement.className = 'media-item';
+                mediaElement.innerHTML = `
+                  <h3>${media.title}</h3>
+                  <p>${media.description}</p>
+                  <img src="${media.url}" alt="${media.title}" />
+                `;
+                mediaContainer.appendChild(mediaElement);
+              });
+            } catch (error) {
+              console.error('Error loading media:', error);
+            }
+          }
+  
+          function changeView(view) {
+            loadMedia(view === 'all_media' ? '' : view);
+          }
+  
+          document.addEventListener('DOMContentLoaded', () => {
+            loadMedia(''); // Load all media by default
+          });
+        </script>
       </div>
+    </div>
 
       <a class="loginbtn" href="login.html" role="link"
         >Login/Sign up Here to Enjoy all of amls facilities</a

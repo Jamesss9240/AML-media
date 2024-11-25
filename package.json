@@ -1,6 +1,9 @@
 {
   "dependencies": {
+    "express": "^4.21.1",
     "nano": "^10.1.4",
-    "pouchdb": "^9.0.0"
+    "pouchdb": "^9.0.0",
+    "punycode": "^2.3.1",
+    "request": "^2.88.2"
   }
 }
