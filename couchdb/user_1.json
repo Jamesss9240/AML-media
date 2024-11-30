@@ -1,0 +1,13 @@
+{
+    "_id": "d7fc480e1af4b2d468e0fafee7003026",
+    "_rev": "1-b6d0a11e97f10dd2a31a536570cd983d",
+    "email": "TestJames@email.com",
+    "firstname": "James",
+    "lastname": "Kerridge",
+    "items": [
+        {"MediaID": "Item 1", "Title": "This is item 1", "Description": "This is item 1", "url": "images/book.webp"},
+        {"MediaID": "Item 2", "Title": "This is item 2", "Description": "This is item 2", "url": "images/library_interior.webp"},
+        {"MediaID": "Item 3", "Title": "This is item 3", "Description": "This is item 3", "url": "images/library_interior.webp"}
+    ],
+    "password": "$2a$10$QF36kY6HSfd7bke/xD28CebMRGg1o8zft0/jyuwkqu8r.l4G6lJ1a"
+  }

@@ -1,0 +1,118 @@
+{
+    "_id": "_design/media",
+    "_rev": "9-47ba55e981bfc41dc91fd8f19c0a1db6",
+    "views": {
+      "all_media": {
+        "map": "function (doc) { if (doc.type === 'media' || doc.type === 'book' || doc.type === 'journal' || doc.type === 'film' || doc.type === 'game') { emit(doc._id, doc); } }"
+      },
+      "books": {
+        "map": "function (doc) { if (doc.type === 'book') { emit(doc._id, doc); } }"
+      },
+      "by_user_media_ids": {
+        "map": "function (doc) { emit(doc._id, doc); }"
+      }
+    }
+  }
+
+  {
+    "_id": "media_id_1",
+    "_rev": "5-165e51df5df0f936c3f7696cffb38cef",
+    "category": "media",
+    "type": "book",
+    "title": "The Great Gatsby",
+    "description": "A novel written by American author F. Scott Fitzgerald.",
+    "url": "https://example.com/images/great_gatsby.jpg",
+    "author": "F. Scott Fitzgerald",
+    "published_date": "1925-04-10",
+    "quantity": "5"
+  }  
+
+  {
+    "_id": "media_id_2",
+    "_rev": "4-13315f182fdf8f0cb0319eafcc086b49",
+    "type": "book",
+    "category": "media",
+    "title": "To Kill a Mockingbird",
+    "description": "A novel by Harper Lee published in 1960.",
+    "url": "https://example.com/images/to_kill_a_mockingbird.jpg",
+    "author": "Harper Lee",
+    "published_date": "1960-07-11",
+    "quantity": "3"
+  }
+
+  {
+    "_id": "media_id_3",
+    "_rev": "7-9b6a022776fe1b269268241bb879d1b5",
+    "type": "journal",
+    "category": "media",
+    "title": "Nature Journal",
+    "description": "A weekly international journal publishing the finest peer-reviewed research in all fields of science and technology.",
+    "url": "https://example.com/images/nature_journal.jpg",
+    "author": "Nature Publishing Group",
+    "published_date": "1869-11-04",
+    "quantity": "3"
+  }
+
+  {
+    "_id": "media_id_4",
+    "_rev": "6-e50bdef1283cd1c49095994e9d536bdf",
+    "type": "film",
+    "category": "media",
+    "title": "Inception",
+    "description": "A 2010 science fiction action film written and directed by Christopher Nolan.",
+    "url": "https://example.com/images/inception.jpg",
+    "director": "Christopher Nolan",
+    "release_date": "2010-07-16",
+    "quantity": "10"
+  }
+
+  {
+    "_id": "media_id_5",
+    "_rev": "5-c8adcfb4daedbf28ecf16ccc0a41ada1",
+    "type": "game",
+    "category": "media",
+    "title": "The Legend of Zelda: Breath of the Wild",
+    "description": "An action-adventure game developed and published by Nintendo.",
+    "url": "https://example.com/images/zelda_botw.jpg",
+    "developer": "Nintendo",
+    "release_date": "2017-03-03",
+    "quantity": "3"
+  }
+
+  -------users--------
+  {
+    "_id": "_design/user_index",
+    "_rev": "4-07589070783a5a7595ef9a5615171222",
+    "views": {
+      "by_email": {
+        "map": "function(doc) {\n    if (doc.email) {\n        emit(doc.email, doc);\n    }\n}"
+      },
+      "media_ids": {
+        "map": "function (doc) { if (doc.media_ids) { emit(doc._id, doc.media_ids); } }"
+      }
+    },
+    "language": "javascript"
+  }
+
+  {
+    "_id": "d7fc480e1af4b2d468e0fafee7003026",
+    "_rev": "18-bd127251f0c653d958cc4c13bfba41b6",
+    "email": "TestJames@email.com",
+    "firstname": "James",
+    "lastname": "Kerridge",
+    "password": "$2a$10$QF36kY6HSfd7bke/xD28CebMRGg1o8zft0/jyuwkqu8r.l4G6lJ1a",
+    "media_ids": [
+      [
+        "media_id_1",
+        1732986740
+      ],
+      [
+        "media_id_3",
+        1732986762
+      ],
+      [
+        "media_id_4",
+        1732986773
+      ]
+    ]
+  }  

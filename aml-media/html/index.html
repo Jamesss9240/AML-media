@@ -65,6 +65,7 @@
           <select id="view-select" onchange="changeView(this.value)">
             <option value="all_media">All Media View</option>
             <option value="books">Books View</option>
+            <option value="user_media">User Media View</option>
           </select>
         </div>
         <script>
@@ -88,7 +89,9 @@
                 mediaElement.innerHTML = `
                   <h3>${media.title}</h3>
                   <p>${media.description}</p>
+                  <p>Quantity in stock: ${media.quantity}</p>
                   <img src="${media.url}" alt="${media.title}" />
+                  <button class="borrow-button" onclick="borrowMedia('${row.id}')">Borrow Media</button>
                 `;
                 mediaContainer.appendChild(mediaElement);
               });
@@ -97,8 +100,130 @@
             }
           }
   
-          function changeView(view) {
-            loadMedia(view === 'all_media' ? '' : view);
+          async function loadUserMedia(userId) {
+            try {
+              console.log(`Loading user media for user ID: ${userId}`);
+              const response = await fetch(`http://localhost:3000/user_media?user_id=${userId}`);
+              const data = await response.json();
+              console.log('User media data received:', data);
+  
+              if (!data.rows || data.rows.length === 0) {
+                console.log('No media found for user.');
+                alert('No media found for user.');
+                return;
+              }
+  
+              const mediaContainer = document.getElementById('media-container');
+              mediaContainer.innerHTML = ''; // Clear previous content
+              data.rows.forEach(row => {
+                const media = row.value;
+                const returnDate = new Date(media.return_date * 1000).toLocaleDateString();
+                const mediaElement = document.createElement('div');
+                mediaElement.className = 'media-item';
+                mediaElement.innerHTML = `
+                  <h3>${media.title}</h3>
+                  <p>${media.description}</p>
+                  <p>Return Date: ${returnDate}</p>
+                  <img src="${media.url}" alt="${media.title}" />
+                  <button class="return-button" onclick="returnMedia('${row.id}', '${userId}')">Return Media</button>
+                `;
+                mediaContainer.appendChild(mediaElement);
+              });
+            } catch (error) {
+              console.error('Error loading user media:', error);
+            }
+          }
+  
+          async function returnMedia(mediaId, userId) {
+            try {
+              console.log(`Returning media ID: ${mediaId} for user ID: ${userId}`);
+              const response = await fetch(`http://localhost:3000/return_media`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ mediaId: mediaId, userId: userId })
+              });
+              const data = await response.json();
+              console.log('Return media response:', data);
+              if (data.success) {
+                alert('Media returned successfully.');
+                loadUserMedia(userId); // Reload user media
+              } else {
+                alert('Failed to return media.');
+              }
+            } catch (error) {
+              console.error('Error returning media:', error);
+              alert('Failed to return media.');
+            }
+          }
+  
+          async function borrowMedia(mediaId) {
+            const email = prompt('Please enter your email:');
+            if (email) {
+              const userId = await getUserIdByEmail(email);
+              if (userId) {
+                try {
+                  console.log(`Borrowing media ID: ${mediaId} for user ID: ${userId}`);
+                  const response = await fetch(`http://localhost:3000/borrow_media`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ mediaId: mediaId, userId: userId })
+                  });
+                  const data = await response.json();
+                  console.log('Borrow media response:', data);
+                  if (data.success) {
+                    alert('Media borrowed successfully.');
+                    loadMedia(''); // Reload media
+                  } else {
+                    alert('Failed to borrow media.');
+                  }
+                } catch (error) {
+                  console.error('Error borrowing media:', error);
+                  alert('Failed to borrow media.');
+                }
+              }
+            }
+          }
+  
+          async function getUserIdByEmail(email) {
+            try {
+              console.log(`Fetching user ID for email: ${email}`);
+              const response = await fetch(`http://localhost:3000/get_user_id`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email: email })
+              });
+              const data = await response.json();
+              console.log('User data received:', data);
+              if (data.userId) {
+                return data.userId;
+              } else {
+                throw new Error('User not found');
+              }
+            } catch (error) {
+              console.error('Error fetching user ID:', error);
+              alert('User not found. Please try again.');
+              return null;
+            }
+          }
+  
+          async function changeView(view) {
+            if (view === 'user_media') {
+              const email = prompt('Please enter your email:');
+              if (email) {
+                const userId = await getUserIdByEmail(email);
+                if (userId) {
+                  loadUserMedia(userId);
+                }
+              }
+            } else {
+              loadMedia(view === 'all_media' ? '' : view);
+            }
           }
   
           document.addEventListener('DOMContentLoaded', () => {
@@ -107,17 +232,14 @@
         </script>
       </div>
     </div>
-
-      <a class="loginbtn" href="login.html" role="link"
-        >Login/Sign up Here to Enjoy all of amls facilities</a
-      >
-      <!-- make hidded when logged in (need roles implemented first) -->
-    </div>
+  
+    <a class="loginbtn" href="login.html" role="link">Login/Sign up Here to Enjoy all of amls facilities</a>
+    <!-- make hidden when logged in (need roles implemented first) -->
   </body>
-</html>
-
-<script>
-  $(function () {
-    $("#nav").load("nav.html");
-  });
-</script>
+  </html>
+  
+  <script>
+    $(function () {
+      $("#nav").load("nav.html");
+    });
+  </script>

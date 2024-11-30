@@ -1,0 +1,10 @@
+{
+    "_id": "_design/user_index",
+    "_rev": "1-59ab34eb599e55f015a9acf8bd2d7d38",
+    "views": {
+      "by_email": {
+        "map": "function(doc) {\n    if (doc.email) {\n        emit(doc.email, doc);\n    }\n}"
+      }
+    },
+    "language": "javascript"
+  }
