@@ -1,74 +1,76 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="en">
+<head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title></title>
-    <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AML Library</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+</head>
+
+<body>
+    <div id="nav"></div>
+
+    <div class="container my-4">
+        <div id="carousel-container" class="mb-4">
+            <div id="carouselAutoPlay" class="carousel slide" data-bs-ride="carousel" data-interval="500">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="images/blog-1.jpg" class="d-block w-100" alt="image of books" />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="images/books.webp" class="d-block w-100" alt="image of books" />
+                    </div>
+                    <div class="carousel-item">
+                      <img src="images/blog-3.jpg" class="d-block w-100" alt="image of books" />
+                  </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselAutoPlay" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselAutoPlay" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="booklist mb-4">
+            <div id="media-container" class="row"></div>
+            <div class="view-selector mb-3">
+                <label for="view-select" class="form-label">Choose a view:</label>
+                <select id="view-select" class="form-select" onchange="changeView(this.value)">
+                    <option value="all_media">All Media View</option>
+                    <option value="books">Books View</option>
+                    <option value="user_media">User Media View</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="icon-container text-center">
+            <h3>Follow Us</h3>
+            <a href="#" class="social-icon"><i class="fab fa-facebook-square"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-twitter-square"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-instagram-square"></i></a>
+        </div>
+    </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-      crossorigin="anonymous"
-    />
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-      crossorigin="anonymous"
-    ></script>
-    <link rel="stylesheet" href="css/main.css" />
-  </head>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(function () {
+            $("#nav").load("nav.html");
+        });
 
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AML Library</title>
-    <link rel="stylesheet" href="./css/style.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css"
-    />
-  </head>
-
-  <body>
-    <div id="nav"></div>
-    <div class="main-container">
-      <div id="carousel-container">
-        <div
-          id="carouselAutoPlay"
-          class="carousel slide"
-          data-bs-ride="carousel"
-          data-interval="500"
-        >
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img src="images/book.webp" alt="image of books" />
-            </div>
-            <div class="carousel-item">
-              <img src="images/books.webp" alt="image of books" />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="booklist">
-        <div id="media-container"></div>
-        <div class="view-selector">
-          <label for="view-select">Choose a view:</label>
-          <select id="view-select" onchange="changeView(this.value)">
-            <option value="all_media">All Media View</option>
-            <option value="books">Books View</option>
-            <option value="user_media">User Media View</option>
-          </select>
-        </div>
-        <script>
+        function changeView(view) {
+            // Your existing functionality to change views based on selection
+            console.log("View changed to:", view);
+            // Implement your logic to dynamically change the media displayed
+        }
           async function loadMedia(filter = '') {
             try {
               console.log(`Loading media with filter: ${filter}`);

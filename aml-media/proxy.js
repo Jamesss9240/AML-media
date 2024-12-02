@@ -7,7 +7,7 @@ const port = 3000;
 const couchdbUsername = 'admin';
 const couchdbPassword = 'Dexter233';
 
-app.use(bodyParser.json()); // Add this line to parse JSON request bodies
+app.use(bodyParser.json()); 
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');

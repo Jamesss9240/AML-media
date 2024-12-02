@@ -1,34 +1,61 @@
-#carousel-container{
-    
-    margin: auto;
-    display: flex;
-    justify-content: center;
-    background-color: purple;
-    list-style: none    ;
+/* Base styles */
+body {
+    background-color: white !important; /* Ensure background is white */
+    color: #ae21ca !important; /* Light chocolate brown color for text */
+    font-family: Arial, sans-serif; 
+    line-height: 1.6; /* Improve readability with line height */
+    margin: 0; 
+    padding: 20px; /* Add padding around the content */
 }
-.carousel-item{
-    transition: -webkit-transform .8s ease;
-    transition: transform .8s ease;
-    transition: transform .8s ease,-webkit-transform .8s ease;
-   
 
-} 
-#carousel-container img{
-    margin: auto;
-    display: flex;
-    justify-content: center;
-    max-width: 600px;
+/* Header styles */
+h1, h2, h3 {
+    color: #000000 !important; 
 }
-.loginbtn{
-    display: flex;
-    justify-content: center;
-    background-color: blueviolet;
-    padding: 20px;
-    color: rgb(255, 255, 255);
+
+/* Link styles */
+a {
+    color: #000000 !important; 
     text-decoration: none; 
-    font-size: larger;
 }
-.loginbtn:hover{
-    text-decoration: underline;
-    background-color: rgb(119, 23, 209);
+
+a:hover {
+    text-decoration: underline; 
+}
+
+/* Button styles */
+button {
+    background-color: #000000 !important; 
+    color: white !important; /* White text color for buttons */
+    border: none; /* Remove default border */
+    padding: 10px 20px; /* Add padding for button */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    border-radius: 5px; /* Rounded corners for buttons */
+}
+
+button:hover {
+    background-color: #a815c6 !important; /* Darken button color on hover */
+}
+
+/* Footer styles */
+footer {
+    background-color: #a814a1 !important; /* Light grey background for footer */
+    color: #000000 !important; /* Light chocolate brown text color */
+    text-align: center; /* Center align footer text */
+    padding: 10px 0; /* Add padding to the footer */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    body {
+        padding: 10px !important; /* Reduce padding on smaller screens */
+    }
+
+    h1 {
+        font-size: 1.5em !important; /* Adjust header size for smaller screens */
+    }
+
+    button {
+        width: 100% !important; /* Make buttons full-width on smaller screens */
+    }
 }
