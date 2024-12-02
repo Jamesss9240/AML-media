@@ -55,21 +55,22 @@
       <script>
         async function loadMedia(filter = '') {
           try {
-            console.log(`Loading media with filter: ${filter}`);
+            
             const response = await fetch(`http://localhost:3000/media?filter=${filter}`);
             const data = await response.json();
-            console.log('Data received:', data);
+            
 
             if (!data.rows) {
               throw new Error('Invalid data format received');
             }
 
             const mediaContainer = document.getElementById('media-container');
-            mediaContainer.innerHTML = ''; // Clear previous content
+            mediaContainer.innerHTML = ''; // clear data
             data.rows.forEach(row => {
               const media = row.value;
               const mediaElement = document.createElement('div');
               mediaElement.className = 'media-item';
+              //media array user display
               mediaElement.innerHTML = `
                   <h3>${media.title}</h3>
                   <p>${media.description}</p>
@@ -80,25 +81,24 @@
               mediaContainer.appendChild(mediaElement);
             });
           } catch (error) {
-            console.error('Error loading media:', error);
+  
           }
         }
 
         async function loadUserMedia(userId) {
           try {
-            console.log(`Loading user media for user ID: ${userId}`);
+            
             const response = await fetch(`http://localhost:3000/user_media?user_id=${userId}`);
             const data = await response.json();
-            console.log('User media data received:', data);
-
+            
             if (!data.rows || data.rows.length === 0) {
-              console.log('No media found for user.');
-              alert('No media found for user.');
+              
+              alert('no media found for this user.');
               return;
             }
 
             const mediaContainer = document.getElementById('media-container');
-            mediaContainer.innerHTML = ''; // Clear previous content
+            mediaContainer.innerHTML = ''; // clear
             data.rows.forEach(row => {
               const media = row.value;
               const returnDate = new Date(media.return_date * 1000).toLocaleDateString();
@@ -114,13 +114,13 @@
               mediaContainer.appendChild(mediaElement);
             });
           } catch (error) {
-            console.error('Error loading user media:', error);
+   
           }
         }
 
         async function returnMedia(mediaId, userId) {
           try {
-            console.log(`Returning media ID: ${mediaId} for user ID: ${userId}`);
+            
             const response = await fetch(`http://localhost:3000/return_media`, {
               method: 'POST',
               headers: {
@@ -131,12 +131,12 @@
 
             const data = await response.json();
 
-            console.log('Return media response:', data);
+           
             if (data.success) {
-              alert(`Media returned successfully. Return Date: ${data.returnDate}`);
+              
               const dateNow = Math.floor(Date.now() / 1000);
-              alert(dateNow);
-              loadUserMedia(userId); // Reload user media
+              
+              loadUserMedia(userId); // refresh
               if (data.returnDate < dateNow) {
                 try {
                   const lateResponse = await fetch(`http://localhost:3000/late_return`, {
@@ -147,28 +147,28 @@
                     body: JSON.stringify({ mediaId: mediaId, userId: userId })
                   });
                   const lateData = await lateResponse.json();
-                  console.log('Late return response:', lateData);
+                 
                   if (lateData.success) {
-                    alert('You have returned the media late. Please pay the fine.');
+                    alert('late return .');
                   } else {
-                    alert('Failed to notify late return.');
+              
                   }
                 } catch (error) {
-                  console.error('Error notifying late return:', error);
-                  alert('Failed to notify late return.');
+              
+                
                 }
               }
             } else {
-              alert('Failed to return media.');
+             
             }
           } catch (error) {
-            console.error('Error returning media:', error);
-            alert('Failed to return media.');
+         
+            alert('failed return.');
           }
         }
         async function getReturnDate(mediaId, userId) {
           try {
-            console.log(`Fetching return date for media ID: ${mediaId} and user ID: ${userId}`);
+         
             const response = await fetch(`http://localhost:3000/get_return_date`, {
               method: 'POST',
               headers: {
@@ -177,15 +177,15 @@
               body: JSON.stringify({ mediaId: mediaId, userId: userId })
             });
             const data = await response.json();
-            console.log('Return date data received:', data);
+       
             if (data.success) {
               return data.returnDate;
             } else {
-              throw new Error('Failed to fetch return date');
+              
             }
           } catch (error) {
-            console.error('Error fetching return date:', error);
-            alert('Failed to fetch return date. Please try again.');
+            
+        
             return null;
           }
         }
@@ -196,7 +196,7 @@
             const userId = await getUserIdByEmail(email);
             if (userId) {
               try {
-                console.log(`Borrowing media ID: ${mediaId} for user ID: ${userId}`);
+                
                 const response = await fetch(`http://localhost:3000/borrow_media`, {
                   method: 'POST',
                   headers: {
@@ -205,23 +205,23 @@
                   body: JSON.stringify({ mediaId: mediaId, userId: userId })
                 });
                 const data = await response.json();
-                console.log('Borrow media response:', data);
+                
                 if (data.success) {
-                  alert('Media borrowed successfully.');
-                  loadMedia(''); // Reload media
+                  alert('borrow success.');
+                  loadMedia(''); // refresh
                 } else {
-                  alert('Failed to borrow media.');
+                  alert('borrow fail.');
                 }
               } catch (error) {
-                console.error('Error borrowing media:', error);
-                alert('Failed to borrow media.');
+               
+                alert('borrow fail.');
               }
             }
           }
         }
         async function getUserIdByEmail(email) {
           try {
-            console.log(`Fetching user ID for email: ${email}`);
+            
             const response = await fetch(`http://localhost:3000/get_user_id`, {
               method: 'POST',
               headers: {
@@ -230,19 +230,19 @@
               body: JSON.stringify({ email: email })
             });
             const data = await response.json();
-            console.log('User data received:', data);
+            
             if (data.userId) {
               return data.userId;
             } else {
               throw new Error('User not found');
             }
           } catch (error) {
-            console.error('Error fetching user ID:', error);
-            alert('User not found. Please try again.');
+           
+            alert('check typos and try again, test email is TestJames@email.com. IT IS CASE SENSETIVE');
             return null;
           }
         }
-
+//temp for before merge with login auth system, where id will be known
         async function changeView(view) {
           if (view === 'user_media') {
             const email = prompt('Please enter your email:');
@@ -258,14 +258,14 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-          loadMedia(''); // Load all media by default
+          loadMedia(''); 
         });
       </script>
     </div>
   </div>
 
   <a class="loginbtn" href="login.html" role="link">Login/Sign up Here to Enjoy all of amls facilities</a>
-  <!-- make hidden when logged in (need roles implemented first) -->
+ 
 </body>
 
 </html>

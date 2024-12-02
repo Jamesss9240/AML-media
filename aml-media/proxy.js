@@ -7,7 +7,7 @@ const port = 3000;
 const couchdbUsername = 'admin';
 const couchdbPassword = 'Dexter233';
 
-app.use(bodyParser.json()); // Add this line to parse JSON request bodies
+app.use(bodyParser.json()); 
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -15,7 +15,7 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   next();
 });
-
+//media views links
 app.get('/media', (req, res) => {
   const filter = req.query.filter;
   let url = 'http://localhost:5984/media/_design/media/_view/all_media';
@@ -25,7 +25,7 @@ app.get('/media', (req, res) => {
   }
 
   console.log(`Fetching data from URL: ${url}`);
-
+//auth
   const options = {
     url: url,
     auth: {
@@ -34,31 +34,22 @@ app.get('/media', (req, res) => {
     }
   };
 
-  request(options, (error, response, body) => {
-    if (error) {
-      console.error('Error fetching data:', error);
-      res.status(500).send(error);
-    } else {
-      const data = JSON.parse(body);
-      console.log('Data fetched successfully:', data);
-      res.send(data);
-    }
-  });
+  
 });
-
+//search query, non case sensetive for ease of use
 app.post('/search', (req, res) => {
   const query = req.body.query;
   const view = req.body.view;
   let selector = {
-    title: { "$regex": `(?i)${query}` } // Case-insensitive regex
+    title: { "$regex": `(?i)${query}` } 
   };
 
   if (view === 'books') {
-    selector.type = 'book'; // Assuming you have a type field to distinguish books
+    selector.type = 'book'; //displays only media of type book
   }
 
   console.log(`Search query: ${query} in view: ${view}`);
-
+//find media
   const options = {
     url: 'http://localhost:5984/media/_find',
     method: 'POST',
@@ -74,25 +65,25 @@ app.post('/search', (req, res) => {
       use_index: "_design/title_index"
     })
   };
-
+//error logging
   request(options, (error, response, body) => {
     if (error) {
-      console.error('Error fetching data:', error);
+      console.error('fail getting data', error);
       res.status(500).send(error);
     } else {
       const data = JSON.parse(body);
-      console.log('Search data fetched successfully:', data);
+      console.log('sucsess:', data);
       res.status(response.statusCode).set(response.headers).send(data);
     }
   });
 });
-
+//gets media that the user has owned by id
 app.get('/user_media', (req, res) => {
   const userId = req.query.user_id;
   const userUrl = `http://localhost:5984/users/_design/user_index/_view/media_ids?key="${userId}"`;
 
   console.log(`Fetching user media IDs from URL: ${userUrl}`);
-
+//db auth
   const userOptions = {
     url: userUrl,
     auth: {
@@ -103,13 +94,13 @@ app.get('/user_media', (req, res) => {
 
   request(userOptions, (error, response, body) => {
     if (error) {
-      console.error('Error fetching user media IDs:', error);
+      console.error('error getting user id:', error);
       res.status(500).send(error);
     } else {
       const userMediaData = JSON.parse(body);
-      console.log('User media data received:', userMediaData);
+      console.log('user data recieved', userMediaData);
       if (!userMediaData.rows || userMediaData.rows.length === 0) {
-        console.error('No media IDs found for user:', userId);
+        console.error('no id found for user', userId);
         res.status(200).send({ rows: [] });
         return;
       }
@@ -122,7 +113,7 @@ app.get('/user_media', (req, res) => {
       }, {});
       const mediaUrl = `http://localhost:5984/media/_design/media/_view/by_user_media_ids?keys=${JSON.stringify(mediaIds)}`;
 
-      console.log(`Fetching media from URL: ${mediaUrl}`);
+      //console.log(`Fetching media from URL: ${mediaUrl}`);
 
       const mediaOptions = {
         url: mediaUrl,
@@ -134,15 +125,15 @@ app.get('/user_media', (req, res) => {
 
       request(mediaOptions, (error, response, body) => {
         if (error) {
-          console.error('Error fetching media:', error);
+          console.error('error getting media:', error);
           res.status(500).send(error);
         } else {
           const mediaData = JSON.parse(body);
-          console.log('Media data received:', mediaData);
+          console.log('media recieved:', mediaData);
           mediaData.rows.forEach(row => {
             row.value.return_date = returnDates[row.id];
           });
-          console.log('Media fetched successfully:', JSON.stringify(mediaData));
+          console.log('media fetched:', JSON.stringify(mediaData));
           res.send(mediaData);
         }
       });
@@ -154,7 +145,7 @@ app.post('/get_user_id', (req, res) => {
   const email = req.body.email;
   const userUrl = `http://localhost:5984/users/_find`;
 
-  console.log(`Fetching user ID for email: ${email}`);
+  console.log(`getting user id for email: ${email}`);
 
   const userOptions = {
     url: userUrl,
@@ -194,9 +185,9 @@ app.post('/borrow_media', (req, res) => {
   const mediaUrl = `http://localhost:5984/media/${mediaId}`;
   const userUrl = `http://localhost:5984/users/${userId}`;
 
-  console.log(`Borrowing media ID: ${mediaId} for user ID: ${userId}`);
+  console.log(`borrowing: ${mediaId} ID: ${userId}`);
 
-  // Fetch the media document
+  //get media doc
   request({
     url: mediaUrl,
     auth: {
@@ -205,13 +196,13 @@ app.post('/borrow_media', (req, res) => {
     }
   }, (error, response, body) => {
     if (error) {
-      console.error('Error fetching media document:', error);
+      console.error('fetch error:', error);
       res.status(500).send({ success: false, error });
     } else {
       const mediaDoc = JSON.parse(body);
-      console.log('Media document fetched:', mediaDoc);
+      console.log('fetched media doc:', mediaDoc);
 
-      // Fetch the user document
+      //get user doc
       request({
         url: userUrl,
         auth: {
@@ -220,24 +211,24 @@ app.post('/borrow_media', (req, res) => {
         }
       }, (error, response, body) => {
         if (error) {
-          console.error('Error fetching user document:', error);
+          console.error('user document error:', error);
           res.status(500).send({ success: false, error });
         } else {
           const userDoc = JSON.parse(body);
-          console.log('User document fetched:', userDoc);
+          console.log('user doc success:', userDoc);
 
-          // Check if the media is already borrowed by the user
+          //check if borrowed already, prevents double borrowing
           const isAlreadyBorrowed = userDoc.media_ids.some(item => item[0] === mediaId);
 
           if (isAlreadyBorrowed) {
-            res.status(400).send({ success: false, error: 'Media is already borrowed by the user' });
+            res.status(400).send({ success: false, error: 'media already borrowed' });
           } else {
-            // Check if there is enough quantity to borrow
+            // check if quantity is more than 0, since media cnnot be borrowed if 0
             if (parseInt(mediaDoc.quantity) > 0) {
-              // Decrease the quantity of the media by 1
+            
               mediaDoc.quantity = (parseInt(mediaDoc.quantity) - 1).toString();
 
-              // Update the media document
+              // update media doc
               request({
                 url: mediaUrl,
                 method: 'PUT',
@@ -251,15 +242,15 @@ app.post('/borrow_media', (req, res) => {
                 body: JSON.stringify(mediaDoc)
               }, (error, body) => {
                 if (error) {
-                  console.error('Error updating media document:', error);
+                  console.error('upd error media:', error);
                   res.status(500).send({ success: false, error });
                 } else {
-                  console.log('Media document updated successfully:', body);
+                  console.log('upd media success:', body);
 
-                  // Add the media ID to the user's media_ids
+                  // media id and return date to user doc
                   userDoc.media_ids.push([mediaId, Math.floor(Date.now() / 1000) + 2 * 7 * 24 * 60 * 60]);
 
-                  // Update the user document
+                  // update user doc
                   request({
                     url: userUrl,
                     method: 'PUT',
@@ -273,17 +264,17 @@ app.post('/borrow_media', (req, res) => {
                     body: JSON.stringify(userDoc)
                   }, (error, response, body) => {
                     if (error) {
-                      console.error('Error updating user document:', error);
+                      console.error('user document upd fail:', error);
                       res.status(500).send({ success: false, error });
                     } else {
-                      console.log('User document updated successfully:', body);
+                      console.log('user doc updated:', body);
                       res.send({ success: true });
                     }
                   });
                 }
               });
             } else {
-              res.status(400).send({ success: false, error: 'No more media available to borrow' });
+              
             }
           }
         }
@@ -295,7 +286,7 @@ app.get('/user_borrowed_media', (req, res) => {
   const userId = req.query.user_id;
   const userUrl = `http://localhost:5984/users/${userId}`;
 
-  console.log(`Fetching borrowed media for user ID: ${userId}`);
+
 
   const userOptions = {
     url: userUrl,
@@ -307,11 +298,11 @@ app.get('/user_borrowed_media', (req, res) => {
 
   request(userOptions, (error, response, body) => {
     if (error) {
-      console.error('Error fetching user document:', error);
+      console.error('error getting user doc', error);
       res.status(500).send(error);
     } else {
       const userDoc = JSON.parse(body);
-      console.log('User document fetched:', userDoc);
+      console.log('user doc fetched', userDoc);
 
       if (!userDoc.media_ids || userDoc.media_ids.length === 0) {
         res.status(200).send({ media: [] });
@@ -325,8 +316,8 @@ app.get('/user_borrowed_media', (req, res) => {
       }, {});
       const mediaUrl = `http://localhost:5984/media/_design/media/_view/by_user_media_ids?keys=${JSON.stringify(mediaIds)}`;
 
-      console.log(`Fetching media from URL: ${mediaUrl}`);
-
+      
+//auth
       const mediaOptions = {
         url: mediaUrl,
         auth: {
@@ -337,15 +328,15 @@ app.get('/user_borrowed_media', (req, res) => {
 
       request(mediaOptions, (error, response, body) => {
         if (error) {
-          console.error('Error fetching media:', error);
+          console.error('error getting media:', error);
           res.status(500).send(error);
         } else {
           const mediaData = JSON.parse(body);
-          console.log('Media data received:', mediaData);
+          console.log('media revcieved', mediaData);
           mediaData.rows.forEach(row => {
             row.value.return_date = returnDates[row.id];
           });
-          console.log('Borrowed media fetched successfully:', JSON.stringify(mediaData));
+          console.log('borrowed media rewecieved:', JSON.stringify(mediaData));
           res.send(mediaData);
         }
       });
@@ -358,9 +349,8 @@ app.post('/return_media', (req, res) => {
   const userUrl = `http://localhost:5984/users/${userId}`;
   const mediaUrl = `http://localhost:5984/media/${mediaId}`;
 
-  console.log(`Returning media ID: ${mediaId} for user ID: ${userId}`);
 
-  // Fetch the user document
+  // fetch user doc
   request({
     url: userUrl,
     auth: {
@@ -369,23 +359,23 @@ app.post('/return_media', (req, res) => {
     }
   }, (error, response, body) => {
     if (error) {
-      console.error('Error fetching user document:', error);
+      console.error('error fetching user doc', error);
       res.status(500).send({ success: false, error });
     } else {
       const userDoc = JSON.parse(body);
-      console.log('User document fetched:', userDoc);
+      console.log('user doc fetched:', userDoc);
       const mediaItem = userDoc.media_ids.find(item => item[0] === mediaId);
       const returnDate = mediaItem ? mediaItem[1] : null;
-
+//safegurad for if somehow media is returned while not being borrowed
       if (!mediaItem) {
-        res.status(400).send({ success: false, error: 'Media not borrowed by user' });
+        res.status(400).send({ success: false, error: 'media not borrowed' });
         return;
       }
 
-      // Remove the media ID from the user's media_ids
+      // remove mediafrom user 
       userDoc.media_ids = userDoc.media_ids.filter(item => item[0] !== mediaId);
 
-      // Update the user document
+      // upd user doc
       request({
         url: userUrl,
         method: 'PUT',
@@ -399,10 +389,10 @@ app.post('/return_media', (req, res) => {
         body: JSON.stringify(userDoc)
       }, (error, response, body) => {
         if (error) {
-          console.error('Error updating user document:', error);
+          console.error('error updating', error);
           res.status(500).send({ success: false, error });
         } else {
-          console.log('User document updated successfully:', body);
+          console.log('update success:', body);
 
           // Fetch the media document
           request({
@@ -413,16 +403,16 @@ app.post('/return_media', (req, res) => {
             }
           }, (error, response, body) => {
             if (error) {
-              console.error('Error fetching media document:', error);
+              console.error('error getting media doc:', error);
               res.status(500).send({ success: false, error });
             } else {
               const mediaDoc = JSON.parse(body);
-              console.log('Media document fetched:', mediaDoc);
+              console.log('media doc fetched:', mediaDoc);
 
-              // Increase the quantity of the media by 1
+              // +1 to media quantity
               mediaDoc.quantity = (parseInt(mediaDoc.quantity) + 1).toString();
 
-              // Update the media document
+              // update db
               request({
                 url: mediaUrl,
                 method: 'PUT',
@@ -436,10 +426,10 @@ app.post('/return_media', (req, res) => {
                 body: JSON.stringify(mediaDoc)
               }, (error, response, body) => {
                 if (error) {
-                  console.error('Error updating media document:', error);
+                  console.error('upd error:', error);
                   res.status(500).send({ success: false, error });
                 } else {
-                  console.log('Media document updated successfully:', body);
+                  console.log('upd success:', body);
                   res.send({ success: true, returnDate: returnDate, media: mediaDoc });
                 }
               });
@@ -455,9 +445,9 @@ app.post('/late_return', (req, res) => {
   const userUrl = `http://localhost:5984/users/${userId}`;
   const mediaUrl = `http://localhost:5984/media/${mediaId}`;
 
-  console.log(`Processing late return for media ID: ${mediaId} and user ID: ${userId}`);
 
-  // Fetch the user document
+
+  // fetch user doc
   request({
     url: userUrl,
     auth: {
@@ -466,13 +456,13 @@ app.post('/late_return', (req, res) => {
     }
   }, (error, response, body) => {
     if (error) {
-      console.error('Error fetching user document:', error);
+      console.error('error getting user doc', error);
       res.status(500).send({ success: false, error });
     } else {
       const userDoc = JSON.parse(body);
-      console.log('User document fetched:', userDoc);
+      console.log('user doc fetched:', userDoc);
 
-      // Fetch the media document
+      // fetvch media doc
       request({
         url: mediaUrl,
         auth: {
@@ -481,15 +471,15 @@ app.post('/late_return', (req, res) => {
         }
       }, (error, response, body) => {
         if (error) {
-          console.error('Error fetching media document:', error);
+          console.error('error getting media doc:', error);
           res.status(500).send({ success: false, error });
         } else {
           const mediaDoc = JSON.parse(body);
-          console.log('Media document fetched:', mediaDoc);
+          console.log('media doc fetched:', mediaDoc);
 
-          // Increase the quantity of the late_returns in the user db by 1
+          // +1 late returns to user
           userDoc.late_returns = (parseInt(userDoc.late_returns) + 1).toString();
-          //update the user document
+          // upd user doc
           request({
             url: userUrl,
             method: 'PUT',
@@ -503,14 +493,14 @@ app.post('/late_return', (req, res) => {
             body: JSON.stringify(userDoc)
           }, (error, response, body) => {
             if (error) {
-              console.error('Error updating user document:', error);
+              console.error('upd error:', error);
               res.status(500).send({ success: false, error });
             } else {
-              console.log('User document updated successfully:', body);
+              console.log('user upd sucsess:', body);
             }
           });
 
-          console.log(`User ${userId} returned media ${mediaId} late.`);
+          
 
           res.send({ success: true });
         }
@@ -518,6 +508,7 @@ app.post('/late_return', (req, res) => {
     }
   });
 });
+//notify runtime
 app.listen(port, () => {
   console.log(`Proxy server is running on http://localhost:${port}`);
 });
