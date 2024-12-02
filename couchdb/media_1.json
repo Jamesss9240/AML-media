@@ -1,0 +1,8 @@
+
+{
+  "_id": "media_1",
+  "type": "media",
+  "title": "Book Cover",
+  "description": "A cover image of a book.",
+  "url": "images/book.webp"
+}

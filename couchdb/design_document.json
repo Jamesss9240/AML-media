@@ -1,0 +1,15 @@
+
+{
+  "_id": "_design/media",
+  "views": {
+    "all_media": {
+      "map": "function(doc) { if (doc.type === 'media') { emit(doc._id, doc); } }"
+    }
+  },
+  "indexes": {
+    "media_index": {
+      "analyzer": "standard",
+      "index": "function(doc) { if (doc.type === 'media') { index('title', doc.title); index('description', doc.description); } }"
+    }
+  }
+}

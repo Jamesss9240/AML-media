@@ -146,7 +146,43 @@
         <form action="" class="search-form">
             <input type="search" name="" placeholder="search here for book..." id="search-box">
             <label for="search-box" class="fas fa-search"></label>
-        </form>
+            <script>
+              document.querySelector('.search-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+                const query = document.querySelector('#search-box').value;
+                const view = document.querySelector('#view-select').value;
+                fetch(`http://localhost:3000/search`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ query: query, view: view })
+                })
+                .then(response => response.json())
+                .then(data => {
+                  const mediaContainer = document.querySelector('#media-container');
+                  if (!mediaContainer) {
+                    console.error('Error: mediaContainer element not found');
+                    return;
+                  }
+                  mediaContainer.innerHTML = ''; // Clear previous results
+                  data.docs.forEach(media => {
+                    const mediaElement = document.createElement('div');
+                    mediaElement.classList.add('media-item');
+                    mediaElement.innerHTML = `
+                      <h3>${media.title}</h3>
+                      <p>${media.description}</p>
+                      <img src="${media.url}" alt="${media.title}" />
+                    `;
+                    mediaContainer.appendChild(mediaElement);
+                  });
+                })
+                .catch(error => {
+                  console.error('Error:', error);
+                });
+              });
+            </script>
+          </form>
   
         <div class="icons">
             <div id="search-btn" class="fas fa-search"></div>
