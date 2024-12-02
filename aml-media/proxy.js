@@ -249,7 +249,7 @@ app.post('/borrow_media', (req, res) => {
                   'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(mediaDoc)
-              }, (error, response, body) => {
+              }, (error, body) => {
                 if (error) {
                   console.error('Error updating media document:', error);
                   res.status(500).send({ success: false, error });
@@ -257,7 +257,7 @@ app.post('/borrow_media', (req, res) => {
                   console.log('Media document updated successfully:', body);
 
                   // Add the media ID to the user's media_ids
-                  userDoc.media_ids.push([mediaId, Math.floor(Date.now() / 1000)]);
+                  userDoc.media_ids.push([mediaId, Math.floor(Date.now() / 1000) + 2 * 7 * 24 * 60 * 60]);
 
                   // Update the user document
                   request({
@@ -291,6 +291,67 @@ app.post('/borrow_media', (req, res) => {
     }
   });
 });
+app.get('/user_borrowed_media', (req, res) => {
+  const userId = req.query.user_id;
+  const userUrl = `http://localhost:5984/users/${userId}`;
+
+  console.log(`Fetching borrowed media for user ID: ${userId}`);
+
+  const userOptions = {
+    url: userUrl,
+    auth: {
+      user: couchdbUsername,
+      pass: couchdbPassword
+    }
+  };
+
+  request(userOptions, (error, response, body) => {
+    if (error) {
+      console.error('Error fetching user document:', error);
+      res.status(500).send(error);
+    } else {
+      const userDoc = JSON.parse(body);
+      console.log('User document fetched:', userDoc);
+
+      if (!userDoc.media_ids || userDoc.media_ids.length === 0) {
+        res.status(200).send({ media: [] });
+        return;
+      }
+
+      const mediaIds = userDoc.media_ids.map(item => item[0]);
+      const returnDates = userDoc.media_ids.reduce((acc, item) => {
+        acc[item[0]] = item[1];
+        return acc;
+      }, {});
+      const mediaUrl = `http://localhost:5984/media/_design/media/_view/by_user_media_ids?keys=${JSON.stringify(mediaIds)}`;
+
+      console.log(`Fetching media from URL: ${mediaUrl}`);
+
+      const mediaOptions = {
+        url: mediaUrl,
+        auth: {
+          user: couchdbUsername,
+          pass: couchdbPassword
+        }
+      };
+
+      request(mediaOptions, (error, response, body) => {
+        if (error) {
+          console.error('Error fetching media:', error);
+          res.status(500).send(error);
+        } else {
+          const mediaData = JSON.parse(body);
+          console.log('Media data received:', mediaData);
+          mediaData.rows.forEach(row => {
+            row.value.return_date = returnDates[row.id];
+          });
+          console.log('Borrowed media fetched successfully:', JSON.stringify(mediaData));
+          res.send(mediaData);
+        }
+      });
+    }
+  });
+});
 
 app.post('/return_media', (req, res) => {
   const { mediaId, userId } = req.body;
@@ -313,6 +374,13 @@ app.post('/return_media', (req, res) => {
     } else {
       const userDoc = JSON.parse(body);
       console.log('User document fetched:', userDoc);
+      const mediaItem = userDoc.media_ids.find(item => item[0] === mediaId);
+      const returnDate = mediaItem ? mediaItem[1] : null;
+
+      if (!mediaItem) {
+        res.status(400).send({ success: false, error: 'Media not borrowed by user' });
+        return;
+      }
 
       // Remove the media ID from the user's media_ids
       userDoc.media_ids = userDoc.media_ids.filter(item => item[0] !== mediaId);
@@ -372,7 +440,7 @@ app.post('/return_media', (req, res) => {
                   res.status(500).send({ success: false, error });
                 } else {
                   console.log('Media document updated successfully:', body);
-                  res.send({ success: true });
+                  res.send({ success: true, returnDate: returnDate, media: mediaDoc });
                 }
               });
             }
@@ -382,7 +450,74 @@ app.post('/return_media', (req, res) => {
     }
   });
 });
+app.post('/late_return', (req, res) => {
+  const { mediaId, userId } = req.body;
+  const userUrl = `http://localhost:5984/users/${userId}`;
+  const mediaUrl = `http://localhost:5984/media/${mediaId}`;
 
+  console.log(`Processing late return for media ID: ${mediaId} and user ID: ${userId}`);
+
+  // Fetch the user document
+  request({
+    url: userUrl,
+    auth: {
+      user: couchdbUsername,
+      pass: couchdbPassword
+    }
+  }, (error, response, body) => {
+    if (error) {
+      console.error('Error fetching user document:', error);
+      res.status(500).send({ success: false, error });
+    } else {
+      const userDoc = JSON.parse(body);
+      console.log('User document fetched:', userDoc);
+
+      // Fetch the media document
+      request({
+        url: mediaUrl,
+        auth: {
+          user: couchdbUsername,
+          pass: couchdbPassword
+        }
+      }, (error, response, body) => {
+        if (error) {
+          console.error('Error fetching media document:', error);
+          res.status(500).send({ success: false, error });
+        } else {
+          const mediaDoc = JSON.parse(body);
+          console.log('Media document fetched:', mediaDoc);
+
+          // Increase the quantity of the late_returns in the user db by 1
+          userDoc.late_returns = (parseInt(userDoc.late_returns) + 1).toString();
+          //update the user document
+          request({
+            url: userUrl,
+            method: 'PUT',
+            auth: {
+              user: couchdbUsername,
+              pass: couchdbPassword
+            },
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userDoc)
+          }, (error, response, body) => {
+            if (error) {
+              console.error('Error updating user document:', error);
+              res.status(500).send({ success: false, error });
+            } else {
+              console.log('User document updated successfully:', body);
+            }
+          });
+
+          console.log(`User ${userId} returned media ${mediaId} late.`);
+
+          res.send({ success: true });
+        }
+      });
+    }
+  });
+});
 app.listen(port, () => {
   console.log(`Proxy server is running on http://localhost:${port}`);
 });
