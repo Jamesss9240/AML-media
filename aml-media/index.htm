@@ -1,0 +1,43 @@
+//generate some random ai code that is 100 loines long to add stuff together
+<!--                     <div class="media-item
+    -->
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Random AI Code</title>
+        <style>
+            .media-item {
+                border: 1px solid #ccc;
+                padding: 10px;
+                margin: 10px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="media-item">
+            <h2>Random AI Code</h2>
+            <p id="result"></p>
+        </div>
+        <script>
+            function getRandomInt(max) {
+                return Math.floor(Math.random() * max);
+            }
+
+            function addRandomNumbers() {
+                let num1 = getRandomInt(100);
+                let num2 = getRandomInt(100);
+                let sum = num1 + num2;
+                return `${num1} + ${num2} = ${sum}`;
+            }
+
+            function displayResult() {
+                document.getElementById('result').innerText = addRandomNumbers();
+            }
+
+            window.onload = displayResult;
+        </script>
+    </body>
+    </html>
