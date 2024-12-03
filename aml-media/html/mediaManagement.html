@@ -1,0 +1,76 @@
+<!DOCTYPE html> 
+<html>
+<head>
+     <!-- Main heading of the page -->
+    <title>AML Library</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="mediaMan.css"
+</head>
+<body>
+
+    <div class="container">
+        <h1>AML Library</h1>
+
+        <form>
+            <!-- Form group for book title -->
+            <div class="form-group">
+                <label for="title">Title:</label>
+                <input type="text" class="form-control" id="title" required>
+            </div>
+            <div class="form-group">
+                <label for="author">Author:</label>
+                <input type="text" class="form-control" id="author" required>
+            </div>
+            <div class="form-group">
+                <label for="publisher">Publisher:</label>
+                <input type="text" class="form-control" id="publisher" required>
+            </div>
+            <div class="form-group">
+                <label for="isbn">International Standard Book Number:</label>
+                <input type="text" class="form-control" id="isbn" required>
+            </div>
+            <div class="form-group">
+                <label for="copies">Copies:</label>
+                <input type="text" class="form-control" id="copies" required>
+            </div>
+             <!-- Button to add a new book -->   
+            <button type="button" class="btn btn-primary" onclick="addBook()">Add Book</button>
+            <!-- Button to remove a book -->
+            <button type="button" class="btn btn-danger" onclick="removeBook()">Remove Book</button>
+            
+        </form>
+        <hr>
+        <!-- Form for searching books -->
+        <form>
+            <div class="Form-group">
+                <label for="search">Search:</label>
+                <input type="text" class="form-control" id="search" onkeyup="searchBook()">
+            </div>
+        </form>
+        <!-- Table to display book details -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Publisher</th>
+                    <th>ISBN</th>
+                    <th>Copies in Stock</th>
+                </tr>
+            </thead>
+            <tbody id="bookList">
+
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>    
+    <script src="mediaMan.js"></script>
+</body>
+</html>
+            
+
+                
+    
