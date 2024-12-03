@@ -9,6 +9,7 @@ const searchService = require('./proxy/searchService');
 const app = express();
 const port = 3000;
 
+// Middleware to handle CORS
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -16,13 +17,23 @@ app.use((req, res, next) => {
   next();
 });
 
+// Middleware to parse JSON bodies
 app.use(bodyParser.json());
-app.use(mediaService);
-app.use(userService);
-app.use(borrowService);
-app.use(returnService);
-app.use(searchService);
 
+// Register service routes
+app.use('/media', mediaService);
+app.use('/user', userService);
+app.use('/borrow', borrowService);
+app.use('/return', returnService);
+app.use('/search', searchService);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('error');
+});
+
+// Start the server
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
