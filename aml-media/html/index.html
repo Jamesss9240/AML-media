@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title></title>
+  <title>AML Library</title>
   <meta name="description" content="" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -15,14 +15,14 @@
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
   <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
 </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AML Library</title>
-  <link rel="stylesheet" href="./css/style.css" />
+<body>
+  <div id="nav"></div>
+  <div class="main-container">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
 </head>
@@ -93,8 +93,19 @@
             
             if (!data.rows || data.rows.length === 0) {
               
-              alert('no media found for this user.');
-              return;
+          
+          const mediaContainer = document.getElementById('media-container');
+          mediaContainer.innerHTML = ''; // clear
+          
+          const mediaElement = document.createElement('div');
+          mediaElement.className = 'media-item';
+          mediaElement.innerHTML = `
+          <h3>No media found</h3>
+          `;
+          mediaContainer.appendChild(mediaElement);
+          return;
+
+
             }
 
             const mediaContainer = document.getElementById('media-container');
@@ -133,6 +144,7 @@
 
            
             if (data.success) {
+              alert('return success.');
               
               const dateNow = Math.floor(Date.now() / 1000);
               
