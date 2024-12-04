@@ -1,22 +1,35 @@
 const express = require('express');
+const request = require('request');
 const router = express.Router();
-const { couchRequest } = require('./utils');
+const { couchdbUsername, couchdbPassword } = require('./utils');
 
-router.get('/media', (req, res) => {
+router.get('/', (req, res) => {
   const filter = req.query.filter;
-  const url = filter === 'books' 
-    ? 'http://localhost:5984/media/_design/media/_view/books' 
-    : 'http://localhost:5984/media/_design/media/_view/all_media';
+  let url = 'http://localhost:5984/media/_design/media/_view/all_media';
 
-  couchRequest({ url, method: 'GET' }, (err, body) => {
-    if (err) {
-      console.error('error:', err);
-      res.status(500).send('error');
-      return;
+  if (filter === 'books') {
+    url = 'http://localhost:5984/media/_design/media/_view/books';
+  }
+
+  console.log(`Fetching data from URL: ${url}`);
+
+  const options = {
+    url: url,
+    auth: {
+      user: couchdbUsername,
+      pass: couchdbPassword
     }
+  };
 
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.send(body);
+  request(options, (error, response, body) => {
+    if (error) {
+      console.error('Error fetching data:', error);
+      res.status(500).send(error);
+    } else {
+      const data = JSON.parse(body);
+      console.log('Data fetched successfully:', data);
+      res.send(data);
+    }
   });
 });
 
