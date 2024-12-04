@@ -1,20 +1,33 @@
 const express = require('express');
+const request = require('request');
 const router = express.Router();
-const { couchRequest } = require('./utils');
+const { couchdbUsername, couchdbPassword } = require('./utils');
 
-// Route to get user media
-router.get('/user_media', async (req, res) => {
-  try {
-    const userId = req.query.user_id;
-    if (!userId) {
-      return res.status(400).send({ error: 'error' });
+router.get('/user_media', (req, res) => {
+  const userId = req.query.user_id;
+  const userUrl = `http://localhost:5984/users/_design/user_index/_view/media_ids?key="${userId}"`;
+
+  console.log(`Fetching user media IDs from URL: ${userUrl}`);
+
+  const userOptions = {
+    url: userUrl,
+    auth: {
+      user: couchdbUsername,
+      pass: couchdbPassword
     }
+  };
 
-    const userUrl = `http://localhost:5984/users/_design/user_index/_view/media_ids?key="${userId}"`;
-
-    couchRequest({ url: userUrl, method: 'GET' }, res, (userMediaData) => {
-      if (!userMediaData.rows.length) {
-        return res.status(404).send({ error: 'error' });
+  request(userOptions, (error, response, body) => {
+    if (error) {
+      console.error('Error fetching user media IDs:', error);
+      res.status(500).send(error);
+    } else {
+      const userMediaData = JSON.parse(body);
+      console.log('User media data received:', userMediaData);
+      if (!userMediaData.rows || userMediaData.rows.length === 0) {
+        console.error('No media IDs found for user:', userId);
+        res.status(200).send({ rows: [] });
+        return;
       }
 
       const userMediaIds = userMediaData.rows[0].value;
@@ -23,55 +36,73 @@ router.get('/user_media', async (req, res) => {
         acc[item[0]] = item[1];
         return acc;
       }, {});
-
       const mediaUrl = `http://localhost:5984/media/_design/media/_view/by_user_media_ids?keys=${JSON.stringify(mediaIds)}`;
 
-      couchRequest({ url: mediaUrl, method: 'GET' }, res, (mediaData) => {
-        if (!mediaData.rows.length) {
-          return res.status(404).send({ error: 'error' });
+      console.log(`Fetching media from URL: ${mediaUrl}`);
+
+      const mediaOptions = {
+        url: mediaUrl,
+        auth: {
+          user: couchdbUsername,
+          pass: couchdbPassword
         }
+      };
 
-        mediaData.rows.forEach(row => {
-          row.value.return_date = returnDates[row.id];
-        });
-
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-        res.send(mediaData);
+      request(mediaOptions, (error, response, body) => {
+        if (error) {
+          console.error('Error fetching media:', error);
+          res.status(500).send(error);
+        } else {
+          const mediaData = JSON.parse(body);
+          console.log('Media data received:', mediaData);
+          mediaData.rows.forEach(row => {
+            row.value.return_date = returnDates[row.id];
+          });
+          console.log('Media fetched successfully:', JSON.stringify(mediaData));
+          res.send(mediaData);
+        }
       });
-    });
-  } catch (error) {
-    console.error('Error fetching user media:', error);
-    res.status(500).send({ error: 'error' });
-  }
+    }
+  });
 });
 
-// Route to get user ID by email
-router.post('/get_user_id', async (req, res) => {
-  try {
-    const email = req.body.email;
-    if (!email) {
-      return res.status(400).send({ error: 'error' });
-    }
+router.post('/get_user_id', (req, res) => {
+  const email = req.body.email;
+  const userUrl = `http://localhost:5984/users/_find`;
 
-    const userUrl = `http://localhost:5984/users/_find`;
+  console.log(`Fetching user ID for email: ${email}`);
 
-    couchRequest({
-      url: userUrl,
-      method: 'POST',
-      body: JSON.stringify({ selector: { email } })
-    }, res, (data) => {
-      if (!data.docs.length) {
-        return res.status(404).send({ error: 'error' });
+  const userOptions = {
+    url: userUrl,
+    method: 'POST',
+    auth: {
+      user: couchdbUsername,
+      pass: couchdbPassword
+    },
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      selector: {
+        email: email
       }
+    })
+  };
 
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      res.send({ userId: data.docs[0]._id });
-    });
-  } catch (error) {
-    console.error('Error fetching user ID:', error);
-    res.status(500).send({ error: 'error' });
-  }
+  request(userOptions, (error, response, body) => {
+    if (error) {
+      console.error('Error fetching user ID:', error);
+      res.status(500).send(error);
+    } else {
+      const data = JSON.parse(body);
+      console.log('User data received:', data);
+      if (data.docs && data.docs.length > 0) {
+        res.send({ userId: data.docs[0]._id });
+      } else {
+        res.status(404).send('User not found');
+      }
+    }
+  });
 });
 
 module.exports = router;

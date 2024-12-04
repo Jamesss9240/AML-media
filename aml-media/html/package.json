@@ -2,7 +2,8 @@
   "name": "aml-media",
   "version": "1.0.0",
   "description": "aml media library website",
-  "main": "database-connection.js",
+  "type": "module",
+  "main": "proxy.js",
   "scripts": {
     "test": "test1",
     "start": "http-server"
@@ -25,6 +26,8 @@
   },
   "dependencies": {
     "openssl": "^2.0.0",
-    "pouchdb": "^9.0.0"
+    "pouchdb": "^9.0.0",
+    "express": "^4.17.1"
   }
 }
+

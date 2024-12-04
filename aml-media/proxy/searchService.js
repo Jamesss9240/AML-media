@@ -1,34 +1,47 @@
 const express = require('express');
+const request = require('request');
 const router = express.Router();
-const { couchRequest } = require('./utils');
+const { couchdbUsername, couchdbPassword } = require('./utils');
 
-router.post('/search', async (req, res) => {
-  try {
-    const { query, view } = req.body;
-    if (!query) {
-      return res.status(400).json({ error: 'error' });
-    }
+router.post('/', (req, res) => {
+  const query = req.body.query;
+  const view = req.body.view;
+  let selector = {
+    title: { "$regex": `(?i)${query}` } // Case-insensitive regex
+  };
 
-    const selector = { title: { "$regex": `(?i)${query}` } };
-    if (view === 'books') selector.type = 'book';
-
-    const requestBody = {
-      selector,
-      use_index: "_design/title_index"
-    };
-
-    couchRequest({
-      url: 'http://localhost:5984/media/_find',
-      method: 'POST',
-      body: JSON.stringify(requestBody)
-    }, res, (body) => {
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      res.send(body);
-    });
-  } catch (error) {
-    console.error('error', error);
-    res.status(500).json({ error: 'error' });
+  if (view === 'books') {
+    selector.type = 'book'; // Assuming you have a type field to distinguish books
   }
+
+  console.log(`Search query: ${query} in view: ${view}`);
+
+  const options = {
+    url: 'http://localhost:5984/media/_find',
+    method: 'POST',
+    auth: {
+      user: couchdbUsername,
+      pass: couchdbPassword
+    },
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      selector: selector,
+      use_index: "_design/title_index"
+    })
+  };
+
+  request(options, (error, response, body) => {
+    if (error) {
+      console.error('Error fetching data:', error);
+      res.status(500).send(error);
+    } else {
+      const data = JSON.parse(body);
+      console.log('Search data fetched successfully:', data);
+      res.status(response.statusCode).set(response.headers).send(data);
+    }
+  });
 });
 
 module.exports = router;
