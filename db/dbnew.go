@@ -10,9 +10,13 @@ import (
 	"go.uber.org/zap"
 )
 
+// In a real application the DB password wouldn't be stored the way it is I would store it in an environment variable and have it encrypted so the
+// application can decrypt with a private key that's stored in an embed when ran but since we're using this across a team and to make our lives easier it is instead plaintext here
+//
+
 const (
 	ErrConnectingtoCDB   = "couldn't connect to CouchDB"
-	ErrUserAlreadyExists = "This user already exists, cannot register"
+	ErrUserAlreadyExists = "this user already exists, cannot register"
 )
 
 var log = logaml.Log
@@ -24,6 +28,7 @@ type User struct {
 	FirstName string `json:"firstname"`
 	LastName  string `json:"lastname"`
 	Password  string `json:"password"`
+	Role      string `json:"role"`
 }
 
 // func CDBtest() {
@@ -67,7 +72,7 @@ func CDBGetUserByEmail(email string) (*User, error) {
 			return nil, err
 		}
 		log.Sugar().Info("Found document: ", TU)
-		log.Sugar().Info("ID: ", TU.ID, " FirstName: ", TU.FirstName, " LastName: ", TU.FirstName, " Email: ", TU.Email, " Password: ", TU.Password)
+		log.Sugar().Info("ID: ", TU.ID, " FirstName: ", TU.FirstName, " LastName: ", TU.LastName, " Email: ", TU.Email, " Password: ", TU.Password, " Role: ", TU.Role)
 		return TU, nil
 	}
 	if rows.Err() != nil {
@@ -98,6 +103,7 @@ func CDBRegisterUser(email string, firstname string, lastname string, password s
 		"firstname": firstname,
 		"lastname":  lastname,
 		"password":  password,
+		"role":      "member",
 	}
 	docid, rev, err := db.CreateDoc(context.TODO(), doc)
 	if err != nil {

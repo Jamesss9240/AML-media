@@ -19,7 +19,7 @@ const (
 
 var HKey = []byte{0, 48, 28, 48, 13, 34, 64, 84, 7, 32, 1, 6, 8, 47, 3, 7, 90, 255, 82, 205, 157, 10, 8, 34, 55, 143, 63, 99, 208, 20, 134, 166}
 
-func GenerateSessionToken(email string) (string, error) {
+func GenerateSessionToken(email string, role string) (string, error) {
 	// Create a new token object, specifying signing method and the claims
 	// you would like it to contain.
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -29,7 +29,8 @@ func GenerateSessionToken(email string) (string, error) {
 		"nbf":        time.Now().UTC().Unix(),
 		"authorised": true,
 		"user":       email,
-		"vue":        Hash(email),
+		"hue":        Hash(email),
+		"role":       role,
 	})
 
 	// Sign and get the complete encoded token as a string using the secret
@@ -57,7 +58,7 @@ func CheckJWT(tokenString string) (bool, error) {
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok {
-		fmt.Println(claims["iss"], claims["exp"], claims["iat"], claims["nbf"], claims["authorised"], claims["user"], claims["vue"])
+		fmt.Println(claims["iss"], claims["exp"], claims["iat"], claims["nbf"], claims["authorised"], claims["user"], claims["hue"])
 		t := time.Unix(int64(claims["exp"].(float64)), 0).UTC()
 		if time.Now().UTC().After(t) {
 			log.Info("Token expired")
@@ -72,12 +73,12 @@ func CheckJWT(tokenString string) (bool, error) {
 			log.Error("User email and token email mismatch")
 			return false, errors.New(ErrTokenTamper)
 		}
-		if Hash(U.Email) != claims["vue"].(string) {
+		if Hash(U.Email) != claims["hue"].(string) {
 			log.Error("User hashed email and token hashed email mismatch")
-			log.Info("Mismatch", zap.String("DB", Hash(U.Email)), zap.String("Token", claims["vue"].(string)))
+			log.Info("Mismatch", zap.String("DB", Hash(U.Email)), zap.String("Token", claims["hue"].(string)))
 			return false, errors.New(ErrTokenTamper)
 		} else {
-			log.Info("Token an DB Email Hash match!", zap.String("DB", Hash(U.Email)), zap.String("Token", claims["vue"].(string)))
+			log.Info("Token an DB Email Hash match!", zap.String("DB", Hash(U.Email)), zap.String("Token", claims["hue"].(string)))
 		}
 		return true, nil
 	} else {

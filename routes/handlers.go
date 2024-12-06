@@ -112,13 +112,15 @@ func performLogin(c *gin.Context) {
 		})
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
-	}
-	// I am aware this statement is kinda redundant but in terms of authentication you can never be too safe, unless you're using a million bit keys and 5 layers of enecryption for some godforsaken reason
-	if token != "" && err == nil {
-		log.Info("Form data", zap.String("email", JUL.Email), zap.String("password", JUL.Password))
-		c.SetCookie("token", token, 3600, "", "localhost", true, true)
-		c.Set("authenticated", true)
-		c.JSON(http.StatusOK, gin.H{"message": "Login request was successful!"})
+	} else {
+		// I am aware this statement is kinda redundant but in terms of authentication you can never be too safe
+		// unless you're using a million bit keys and 5 layers of enecryption for some godforsaken reason
+		if token != "" {
+			log.Info("Form data", zap.String("email", JUL.Email), zap.String("password", JUL.Password))
+			c.SetCookie("token", token, 3600, "", "localhost", true, true)
+			c.Set("authenticated", true)
+			c.JSON(http.StatusOK, gin.H{"message": "Login request was successful!"})
+		}
 	}
 }
 
@@ -220,7 +222,7 @@ func performSignup(c *gin.Context) {
 	}
 	hashedPassword := auth.BcryptPassword(decryptedpassword)
 	if err := db.CDBRegisterUser(JUR.Email, JUR.FirstName, JUR.LastName, hashedPassword); err == nil {
-		token, err := auth.GenerateSessionToken(JUR.Email)
+		token, err := auth.GenerateSessionToken(JUR.Email, "member")
 		if err != nil {
 			c.SetCookie("token", "", -1, "", "localhost", true, true)
 			c.Set("authenticated", false)
@@ -242,6 +244,20 @@ func performSignup(c *gin.Context) {
 			"ErrorMessage": "We was unable to signup your account, please try again",
 		})
 		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+}
+
+type InternalJWTVerify struct {
+	JWT string `json:"jwt" binding:"required"`
+}
+
+func verify(c *gin.Context) {
+	var JWTVerify = new(InternalJWTVerify)
+	err := c.ShouldBindJSON(&JWTVerify)
+	if err != nil {
+		log.Error("Error binding JSON for InternalJWTVerify", zap.Error(err))
+		c.JSON(http.StatusBadRequest, gin.H{})
 		return
 	}
 }

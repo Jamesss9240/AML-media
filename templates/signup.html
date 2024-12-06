@@ -60,25 +60,30 @@
         document.getElementById('firstname-input').style.borderColor = "red";
       }
       if (!lastname) {
-        console.log("lname empty")
+        console.log("lname empty");
         document.getElementById('lastname-input').style.borderColor = "red";
       }
       if (!email) {
-        console.log("email empty")
+        console.log("email empty");
         document.getElementById('email-input').style.borderColor = "red";
       }
       if (!password) {
-        console.log("pass empty")
+        console.log("pass empty");
         document.getElementById('password-input').style.borderColor = "red";
       }
 			if (!repeatedpassword) {
-        console.log("rpass empty")
+        console.log("rpass empty");
         document.getElementById('repeat-password-input').style.borderColor = "red";
       }
 			if(!firstname || !lastname || !email || !password || !repeatedpassword){
-				console.log("Invalid entries")
+				console.log("Invalid entries");
 				return;
 			}
+      if (password.length < 6) {
+        console.log("password less than 6!")
+        alert("Password must be longer than 6 character!");
+        return;
+      }
 			if (password !== repeatedpassword) {
 				console.log("passwords do not match")
 				document.getElementById('password-input').style.borderColor = "red";
