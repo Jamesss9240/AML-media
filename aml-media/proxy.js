@@ -6,6 +6,7 @@ const userService = require('./proxy/userService');
 const borrowService = require('./proxy/borrowService');
 const returnService = require('./proxy/returnService');
 const searchService = require('./proxy/searchService');
+const userService = require('./proxy/userRoleService');
 
 const app = express();
 const port = 3000;
@@ -13,7 +14,7 @@ const port = 3000;
 const couchdbUsername = 'admin';
 const couchdbPassword = 'Dexter233';
 
-// Middleware to handle CORS
+// cors handling
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -24,20 +25,21 @@ app.use((req, res, next) => {
   next();
 });
 
-// Middleware to parse JSON bodies
+// middleware
 app.use(bodyParser.json());
 
-// Serve static files
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Register service routes
+//service routes
+app.use('/user', userRoleService);
 app.use('/media', mediaService);
 app.use('/user', userService);
 app.use('/borrow', borrowService);
 app.use('/return', returnService);
 app.use('/search', searchService);
 
-// Error handling middleware
+// error middle ware
 app.use((err, req, res, next) => {
   console.error('Internal Server Error:', err);
   res.status(500).send({ success: false, error: 'Internal Server Error' });
