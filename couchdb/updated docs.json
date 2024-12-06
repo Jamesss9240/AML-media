@@ -21,7 +21,7 @@
     "type": "book",
     "title": "The Great Gatsby",
     "description": "A novel written by American author F. Scott Fitzgerald.",
-    "url": "https://example.com/images/great_gatsby.jpg",
+    "url": "https://www.littlebrown.co.uk/wp-content/uploads/2020/07/hbg-title-9780762498130-66.jpg",
     "author": "F. Scott Fitzgerald",
     "published_date": "1925-04-10",
     "quantity": "5"
@@ -34,7 +34,7 @@
     "category": "media",
     "title": "To Kill a Mockingbird",
     "description": "A novel by Harper Lee published in 1960.",
-    "url": "https://example.com/images/to_kill_a_mockingbird.jpg",
+    "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHqnBV0H3l9Rxlbxu1iduxpkch2ziofHh2og&s",
     "author": "Harper Lee",
     "published_date": "1960-07-11",
     "quantity": "3"
@@ -47,7 +47,7 @@
     "category": "media",
     "title": "Nature Journal",
     "description": "A weekly international journal publishing the finest peer-reviewed research in all fields of science and technology.",
-    "url": "https://example.com/images/nature_journal.jpg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/2/21/Nature_volume_536_number_7617_cover_displaying_an_artist%E2%80%99s_impression_of_Proxima_Centauri_b.jpg",
     "author": "Nature Publishing Group",
     "published_date": "1869-11-04",
     "quantity": "3"
@@ -60,7 +60,7 @@
     "category": "media",
     "title": "Inception",
     "description": "A 2010 science fiction action film written and directed by Christopher Nolan.",
-    "url": "https://example.com/images/inception.jpg",
+    "url": "https://m.media-amazon.com/images/I/71CZFPKYIUL._AC_UF894,1000_QL80_.jpg",
     "director": "Christopher Nolan",
     "release_date": "2010-07-16",
     "quantity": "10"
@@ -73,7 +73,7 @@
     "category": "media",
     "title": "The Legend of Zelda: Breath of the Wild",
     "description": "An action-adventure game developed and published by Nintendo.",
-    "url": "https://example.com/images/zelda_botw.jpg",
+    "url": "https://m.media-amazon.com/images/I/611uu1-yBAL._SY425_.jpg",
     "developer": "Nintendo",
     "release_date": "2017-03-03",
     "quantity": "3"
