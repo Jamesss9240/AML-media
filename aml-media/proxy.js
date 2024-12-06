@@ -6,7 +6,7 @@ const userService = require('./proxy/userService');
 const borrowService = require('./proxy/borrowService');
 const returnService = require('./proxy/returnService');
 const searchService = require('./proxy/searchService');
-const userService = require('./proxy/userRoleService');
+
 
 const app = express();
 const port = 3000;
@@ -32,7 +32,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //service routes
-app.use('/user', userRoleService);
+
 app.use('/media', mediaService);
 app.use('/user', userService);
 app.use('/borrow', borrowService);
