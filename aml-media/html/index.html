@@ -23,14 +23,7 @@
 <body>
   <div id="nav"></div>
   <div class="main-container">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
-</head>
-
-<body>
-  <div id="nav"></div>
-  <div class="main-container">
-    <div id="carousel-container">
+    <div id="carousel-container"></div>
       <div id="carouselAutoPlay" class="carousel slide" data-bs-ride="carousel" data-interval="500">
         <div class="carousel-inner">
           <div class="carousel-item active">
@@ -42,6 +35,8 @@
         </div>
       </div>
     </div>
+    <button id="user-media-btn" onclick="toggleUserMediaView()">User Media View</button>
+   
     <div class="booklist">
       <div id="media-container"></div>
       <div class="view-selector">
@@ -49,13 +44,23 @@
         <select id="view-select" onchange="changeView(this.value)">
           <option value="all_media">All Media View</option>
           <option value="books">Books View</option>
-          <option value="user_media">User Media View</option>
+          <option value="journals">Journal View</option>  
+          <option value="films">Film View</option>
+          <option value="games">Games View</option>
         </select>
       </div>
+      <div class="pagination">
+        <button id="prev-page" onclick="prevPage()">Previous</button>
+        <span id="page-info"></span>
+        <button id="next-page" onclick="nextPage()">Next</button>
+      </div>
       <script>
-        async function loadMedia(filter = '') {
+        let currentPage = 1;
+        const itemsPerPage = 10;
+
+        async function loadMedia(filter = '', page = 1) {
           try {
-            const response = await fetch(`http://localhost:3000/media?filter=${filter}`);
+            const response = await fetch(`http://localhost:3000/media?filter=${filter}&page=${page}&limit=${itemsPerPage}`);
             const data = await response.json();
             
             if (!data.rows) {
@@ -77,15 +82,17 @@
                 `;
               mediaContainer.appendChild(mediaElement);
             });
+
+            updatePagination(data.totalPages, page);
           } catch (error) {
             console.error('Error loading media:', error);
             alert('Failed to load media');
           }
         }
 
-        async function loadUserMedia(userId) {
+        async function loadUserMedia(userId, page = 1) {
           try {
-            const response = await fetch(`http://localhost:3000/user/user_media?user_id=${userId}`);
+            const response = await fetch(`http://localhost:3000/user/user_media?user_id=${userId}&page=${page}&limit=${itemsPerPage}`);
             const data = await response.json();
             
             const mediaContainer = document.getElementById('media-container');
@@ -113,6 +120,8 @@
                 `;
               mediaContainer.appendChild(mediaElement);
             });
+
+            updatePagination(data.totalPages, page);
           } catch (error) {
             console.error('Error loading user media:', error);
             alert('Failed to load user media');
@@ -223,17 +232,46 @@
           }
         }
 
-        async function changeView(view) {
+        function updatePagination(totalPages, currentPage) {
+          document.getElementById('page-info').innerText = `Page ${currentPage} of ${totalPages}`;
+          document.getElementById('prev-page').disabled = currentPage === 1;
+          document.getElementById('next-page').disabled = currentPage === totalPages;
+        }
+
+        function prevPage() {
+          if (currentPage > 1) {
+            currentPage--;
+            changeView(document.getElementById('view-select').value, currentPage);
+          }
+        }
+
+        function nextPage() {
+          currentPage++;
+          changeView(document.getElementById('view-select').value, currentPage);
+        }
+
+        async function changeView(view, page = 1) {
+          currentPage = page;
           if (view === 'user_media') {
             const email = prompt('Please enter your email:');
             if (email) {
               const userId = await getUserIdByEmail(email);
               if (userId) {
-                loadUserMedia(userId);
+                loadUserMedia(userId, page);
               }
             }
           } else {
-            loadMedia(view === 'all_media' ? '' : view);
+            loadMedia(view === 'all_media' ? '' : view, page);
+          }
+        }
+
+        async function toggleUserMediaView() {
+          const email = prompt('Please enter your email:');
+          if (email) {
+            const userId = await getUserIdByEmail(email);
+            if (userId) {
+              loadUserMedia(userId);
+            }
           }
         }
 

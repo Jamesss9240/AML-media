@@ -41,8 +41,8 @@ app.use('/search', searchService);
 
 // error middle ware
 app.use((err, req, res, next) => {
-  console.error('Internal Server Error:', err);
-  res.status(500).send({ success: false, error: 'Internal Server Error' });
+  console.error('server error:', err);
+  res.status(500).send({ success: false, error: 'server Error' });
 });
 
 app.listen(port, () => {

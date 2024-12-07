@@ -8,9 +8,7 @@ router.post('/return_media', (req, res) => {
   const userUrl = `http://localhost:5984/users/${userId}`;
   const mediaUrl = `http://localhost:5984/media/${mediaId}`;
 
-  console.log(`Returning media ID: ${mediaId} for user ID: ${userId}`);
-
-  // Fetch the user document
+  // Fetch user doc
   request({
     url: userUrl,
     auth: {
@@ -19,23 +17,21 @@ router.post('/return_media', (req, res) => {
     }
   }, (error, response, body) => {
     if (error) {
-      console.error('Error fetching user document:', error);
-      res.status(500).send({ success: false, error });
+      res.status(500).send({ success: false, error: 'Error fetching user' });
     } else {
       const userDoc = JSON.parse(body);
-      console.log('User document fetched:', userDoc);
       const mediaItem = userDoc.media_ids.find(item => item[0] === mediaId);
       const returnDate = mediaItem ? mediaItem[1] : null;
 
       if (!mediaItem) {
-        res.status(400).send({ success: false, error: 'Media not borrowed by user' });
+        res.status(400).send({ success: false, error: 'Media not borrowed' });
         return;
       }
 
-      // Remove the media ID from the user's media_ids
+      // Remove media ID from user's media_ids
       userDoc.media_ids = userDoc.media_ids.filter(item => item[0] !== mediaId);
 
-      // Update the user document
+      // Update user doc
       request({
         url: userUrl,
         method: 'PUT',
@@ -49,12 +45,9 @@ router.post('/return_media', (req, res) => {
         body: JSON.stringify(userDoc)
       }, (error, response, body) => {
         if (error) {
-          console.error('Error updating user document:', error);
-          res.status(500).send({ success: false, error });
+          res.status(500).send({ success: false, error: 'Error updating user' });
         } else {
-          console.log('User document updated successfully:', body);
-
-          // Fetch the media document
+          // Fetch doc (media)
           request({
             url: mediaUrl,
             auth: {
@@ -63,16 +56,14 @@ router.post('/return_media', (req, res) => {
             }
           }, (error, response, body) => {
             if (error) {
-              console.error('Error fetching media document:', error);
-              res.status(500).send({ success: false, error });
+              res.status(500).send({ success: false, error: 'Error fetching media' });
             } else {
               const mediaDoc = JSON.parse(body);
-              console.log('Media document fetched:', mediaDoc);
 
-              // Increase the quantity of the media by 1
+              //Increase media 
               mediaDoc.quantity = (parseInt(mediaDoc.quantity) + 1).toString();
 
-              // Update the media document
+              // Update media doc
               request({
                 url: mediaUrl,
                 method: 'PUT',
@@ -86,10 +77,8 @@ router.post('/return_media', (req, res) => {
                 body: JSON.stringify(mediaDoc)
               }, (error, response, body) => {
                 if (error) {
-                  console.error('Error updating media document:', error);
-                  res.status(500).send({ success: false, error });
+                  res.status(500).send({ success: false, error: 'Error updating media' });
                 } else {
-                  console.log('Media document updated successfully:', body);
                   res.send({ success: true, returnDate: returnDate, media: mediaDoc });
                 }
               });
@@ -106,9 +95,7 @@ router.post('/late_return', (req, res) => {
   const userUrl = `http://localhost:5984/users/${userId}`;
   const mediaUrl = `http://localhost:5984/media/${mediaId}`;
 
-  console.log(`Processing late return for media ID: ${mediaId} and user ID: ${userId}`);
-
-  // Fetch the user document
+  // Fetch user doc
   request({
     url: userUrl,
     auth: {
@@ -117,13 +104,11 @@ router.post('/late_return', (req, res) => {
     }
   }, (error, response, body) => {
     if (error) {
-      console.error('Error fetching user document:', error);
-      res.status(500).send({ success: false, error });
+      res.status(500).send({ success: false, error: 'Error fetching user' });
     } else {
       const userDoc = JSON.parse(body);
-      console.log('User document fetched:', userDoc);
 
-      // Fetch the media document
+      //fetch media doc
       request({
         url: mediaUrl,
         auth: {
@@ -132,15 +117,14 @@ router.post('/late_return', (req, res) => {
         }
       }, (error, response, body) => {
         if (error) {
-          console.error('Error fetching media document:', error);
-          res.status(500).send({ success: false, error });
+          res.status(500).send({ success: false, error: 'Error fetching media' });
         } else {
           const mediaDoc = JSON.parse(body);
-          console.log('Media document fetched:', mediaDoc);
 
-          // Increase the quantity of the late_returns in the user db by 1
+          //Increase late returns in user doc by 1
           userDoc.late_returns = (parseInt(userDoc.late_returns) + 1).toString();
-          //update the user document
+
+          // update user doc
           request({
             url: userUrl,
             method: 'PUT',
@@ -154,16 +138,11 @@ router.post('/late_return', (req, res) => {
             body: JSON.stringify(userDoc)
           }, (error, response, body) => {
             if (error) {
-              console.error('Error updating user document:', error);
-              res.status(500).send({ success: false, error });
+              res.status(500).send({ success: false, error: 'Error updating user' });
             } else {
-              console.log('User document updated successfully:', body);
+              res.send({ success: true });
             }
           });
-
-          console.log(`User ${userId} returned media ${mediaId} late.`);
-
-          res.send({ success: true });
         }
       });
     }

@@ -25,9 +25,9 @@
     "http-server": "^14.1.1"
   },
   "dependencies": {
+    "express": "^4.17.1",
+    "mocha": "^11.0.1",
     "openssl": "^2.0.0",
-    "pouchdb": "^9.0.0",
-    "express": "^4.17.1"
+    "pouchdb": "^9.0.0"
   }
 }
-

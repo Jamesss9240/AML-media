@@ -7,12 +7,30 @@ router.post('/', (req, res) => {
   const query = req.body.query;
   const view = req.body.view;
   let selector = {
-    title: { "$regex": `(?i)${query}` } // Case-insensitive regex
+    title: { "$regex": `(?i)${query}` } // regex search
   };
 
   if (view === 'books') {
-    selector.type = 'book'; // Assuming you have a type field to distinguish books
+    selector.type = 'book'; 
   }
+  else if (view === 'movies') {
+    selector.type = 'movie';
+  }
+  else if (view === 'journals') {
+    selector.type = 'journal';
+  }
+  else if (view === 'games') {
+    selector.type = 'game';
+    
+  }
+  else if (view === 'all_media') {
+    //all media
+  }
+  else {
+    res.status(400).send('Invalid view');
+    return;
+  }
+
 
   console.log(`Search query: ${query} in view: ${view}`);
 

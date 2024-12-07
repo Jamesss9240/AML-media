@@ -5,16 +5,23 @@ const { couchdbUsername, couchdbPassword } = require('./utils');
 
 router.get('/', (req, res) => {
   const filter = req.query.filter;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
   let url = 'http://localhost:5984/media/_design/media/_view/all_media';
 
   if (filter === 'books') {
     url = 'http://localhost:5984/media/_design/media/_view/books';
+  } else if (filter === 'films') {
+    url = 'http://localhost:5984/media/_design/media/_view/movies';
+  } else if (filter === 'journals') {
+    url = 'http://localhost:5984/media/_design/media/_view/journals';
+  } else if (filter === 'games') {
+    url = 'http://localhost:5984/media/_design/media/_view/games';
   }
 
-  console.log(`Fetching data from URL: ${url}`);
-
   const options = {
-    url: url,
+    url: `${url}?skip=${skip}&limit=${limit}`,
     auth: {
       user: couchdbUsername,
       pass: couchdbPassword
@@ -23,12 +30,13 @@ router.get('/', (req, res) => {
 
   request(options, (error, response, body) => {
     if (error) {
-      console.error('Error fetching data:', error);
-      res.status(500).send(error);
+      console.error('Error:', error);
+      res.status(500).send('error');
     } else {
       const data = JSON.parse(body);
-      console.log('Data fetched successfully:', data);
-      res.send(data);
+      const totalRows = data.total_rows;
+      const totalPages = Math.ceil(totalRows / limit);
+      res.send({ rows: data.rows, totalPages: totalPages });
     }
   });
 });

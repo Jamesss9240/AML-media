@@ -5,7 +5,9 @@ const { couchdbUsername, couchdbPassword } = require('./utils');
 
 router.get('/user_media', (req, res) => {
   const userId = req.query.user_id;
-  const userUrl = `http://localhost:5984/users/_design/user_index/_view/media_ids?key="${userId}"`;
+  const limit = parseInt(req.query.limit, 10) || 10; // Default limit to 10
+  const skip = parseInt(req.query.skip, 10) || 0; // Default skip to 0
+  const userUrl = `http://localhost:5984/users/_design/user_index/_view/media_ids?key="${userId}"&limit=${limit}&skip=${skip}`;
 
   console.log(`Fetching user media IDs from URL: ${userUrl}`);
 
@@ -36,7 +38,7 @@ router.get('/user_media', (req, res) => {
         acc[item[0]] = item[1];
         return acc;
       }, {});
-      const mediaUrl = `http://localhost:5984/media/_design/media/_view/by_user_media_ids?keys=${JSON.stringify(mediaIds)}`;
+      const mediaUrl = `http://localhost:5984/media/_design/media/_view/by_user_media_ids?keys=${JSON.stringify(mediaIds)}&limit=${limit}&skip=${skip}`;
 
       console.log(`Fetching media from URL: ${mediaUrl}`);
 
@@ -48,6 +50,7 @@ router.get('/user_media', (req, res) => {
         }
       };
 
+
       request(mediaOptions, (error, response, body) => {
         if (error) {
           console.error('Error fetching media:', error);
@@ -58,9 +61,11 @@ router.get('/user_media', (req, res) => {
           mediaData.rows.forEach(row => {
             row.value.return_date = returnDates[row.id];
           });
+          
           console.log('Media fetched successfully:', JSON.stringify(mediaData));
           res.send(mediaData);
         }
+        
       });
     }
   });
