@@ -22,19 +22,35 @@
 
 <body>
   <div id="nav"></div>
-  <div class="main-container">
-    <div id="carousel-container"></div>
-      <div id="carouselAutoPlay" class="carousel slide" data-bs-ride="carousel" data-interval="500">
-        <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img src="images/book.webp" alt="image of books" />
-          </div>
-          <div class="carousel-item">
-            <img src="images/books.webp" alt="image of books" />
-          </div>
+  <div id="carousel-container">
+    <div id="carouselAutoPlay" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="images/book.webp" alt="image of books" />
+        </div>
+        <div class="carousel-item">
+          <img src="images/books.webp" alt="image of books" />
         </div>
       </div>
+  
+      <!-- Carousel Indicators (Dots) -->
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselAutoPlay" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#carouselAutoPlay" data-bs-slide-to="1"></button>
+      </div>
+  
+      <!-- Navigation Controls (Previous and Next) -->
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselAutoPlay" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselAutoPlay" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
     </div>
+  </div>
+
     <button id="user-media-btn" onclick="toggleUserMediaView()">User Media View</button>
    
     <div class="booklist">
