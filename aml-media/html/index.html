@@ -15,7 +15,6 @@
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
   <link rel="stylesheet" href="css/main.css" />
-  <link rel="stylesheet" href="./css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
 </head>
@@ -26,10 +25,16 @@
     <div id="carouselAutoPlay" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-inner">
         <div class="carousel-item active">
-          <img src="images/book.webp" alt="image of books" />
+          <img src="images/blog-2.jpg" alt="image of books" />
         </div>
         <div class="carousel-item">
           <img src="images/books.webp" alt="image of books" />
+        </div>
+        <div class="carousel-item">
+          <img src="images/blog-3.jpg" alt="image of books" />
+        </div>
+        <div class="carousel-item">
+          <img src="images/blog-1.jpg" alt="image of books" />
         </div>
       </div>
   
@@ -37,6 +42,8 @@
       <div class="carousel-indicators">
         <button type="button" data-bs-target="#carouselAutoPlay" data-bs-slide-to="0" class="active"></button>
         <button type="button" data-bs-target="#carouselAutoPlay" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#carouselAutoPlay" data-bs-slide-to="2"></button>
+        <button type="button" data-bs-target="#carouselAutoPlay" data-bs-slide-to="3"></button>
       </div>
   
       <!-- Navigation Controls (Previous and Next) -->
@@ -50,6 +57,7 @@
       </button>
     </div>
   </div>
+  
 
     <button id="user-media-btn" onclick="toggleUserMediaView()">User Media View</button>
    
