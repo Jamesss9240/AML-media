@@ -9,6 +9,7 @@
     "nano": "^10.1.4",
     "node": "^20.18.1",
     "node-fetch": "^3.3.2",
+    "openssl": "^2.0.0",
     "pouchdb": "^9.0.0",
     "punycode": "^2.3.1",
     "request": "^2.88.2"

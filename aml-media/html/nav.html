@@ -1,7 +1,36 @@
 <style>
   
   @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,500;0,600;1,400;1,600&display=swap');
-  
+
+.header .header-1 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 9%;
+    background: #ffffff;
+}
+
+.view-selector {
+    margin-right: 0px; 
+    display: flex;
+    align-items: center;
+    
+}
+
+.header .header-1 .search-form {
+    width: 50rem;
+    height: 6rem;
+    display: flex;
+    align-items: center;
+    border: var(--border);
+    background-color: #f9f9f9;
+    border-radius: 2rem;
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    max-width: 100%;
+    margin-left: 0; 
+}
+
       .navbarr{
         background-color: blueviolet;
         color: aliceblue;
@@ -193,7 +222,16 @@
     <div class="header-1">
   
         <a href="" class="logo"><i class="fas fa-book">AML Library</i></a>
-  
+        <div class="view-selector">
+    <label class="viewbox" for="view-select">Choose a view:</label>
+    <select id="view-select"  class="viewbox" onchange="changeView(this.value)">
+      <option value="all_media">All Media View</option>
+      <option value="books">Books View</option>
+      <option value="journals">Journal View</option>  
+      <option value="films">Film View</option>
+      <option value="games">Games View</option>
+    </select>
+  </div>
         <form action="" class="search-form">
             <input type="search" name="" placeholder="search here for media..." id="search-box">
             <label for="search-box" class="fas fa-search"></label>

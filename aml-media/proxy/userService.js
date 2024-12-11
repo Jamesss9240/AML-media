@@ -40,7 +40,7 @@ router.get('/user_media', (req, res) => {
       }, {});
       const mediaUrl = `http://localhost:5984/media/_design/media/_view/by_user_media_ids?keys=${JSON.stringify(mediaIds)}&limit=${limit}&skip=${skip}`;
 
-      console.log(`Fetching media from URL: ${mediaUrl}`);
+      console.log(`fetching media`);
 
       const mediaOptions = {
         url: mediaUrl,

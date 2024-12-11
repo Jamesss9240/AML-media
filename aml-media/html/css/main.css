@@ -25,7 +25,12 @@ a {
     font-weight: bold;
 }
 
-/* Center the carousel container and give it a clean look */
+.viewbox {
+    margin-left: 20px;
+    display: flex;
+    justify-content: flex-start;
+
+}
 #carousel-container {
     display: flex;
     justify-content: center;
