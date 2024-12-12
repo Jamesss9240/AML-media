@@ -240,7 +240,7 @@
                 event.preventDefault();
                 const query = document.querySelector('#search-box').value;
                 const view = document.querySelector('#view-select').value;
-                fetch(`http://localhost:3000/search`, {
+                fetch(`https://127.0.0.1:3000/search`, {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json'

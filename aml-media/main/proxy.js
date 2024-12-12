@@ -63,7 +63,7 @@ app.use((err, req, res, next) => {
 const httpsServer = https.createServer(sslOptions, app);
 
 httpsServer.listen(port, () => {
-  console.log(`HTTPS Server running on https://localhost:${port}`);
+  console.log(`HTTPS Server running on https://127.0.0.1:${port}`);
 });
 
 //https redirecrt

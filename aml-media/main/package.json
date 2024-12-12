@@ -2,11 +2,10 @@
   "name": "aml-media",
   "version": "1.0.0",
   "description": "aml media library website",
-  
   "main": "proxy.js",
   "scripts": {
     "test": "jest",
-    "start": "http-server"
+    "start": "http-server -S -C ./certificates/cert.pem -K ./certificates/key.pem -a 127.0.0.1 -p 8080"
   },
   "repository": {
     "type": "git",
@@ -25,16 +24,15 @@
     "chai": "^5.1.2",
     "chai-http": "^5.1.1",
     "http-server": "^14.1.1",
+    "jest": "^27.5.1",
     "mocha": "^11.0.1",
-    "puppeteer": "^10.0.0",
-    "jest": "^27.0.0"
+    "puppeteer": "^10.0.0"
   },
   "dependencies": {
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "openssl": "^2.0.0",
     "pouchdb": "^9.0.0",
-    "puppeteer": "^10.0.0",
-    "jest": "^27.0.0"
+    "puppeteer": "^10.0.0"
   }
 }
