@@ -8,16 +8,16 @@ router.get('/', (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
   const skip = (page - 1) * limit;
-  let url = 'http://localhost:5984/media/_design/media/_view/all_media';
+  let url = 'http://127.0.0.1:5984/media/_design/media/_view/all_media';
 
   if (filter === 'books') {
-    url = 'http://localhost:5984/media/_design/media/_view/books';
+    url = 'http://127.0.0.1:5984/media/_design/media/_view/books';
   } else if (filter === 'films') {
-    url = 'http://localhost:5984/media/_design/media/_view/movies';
+    url = 'http://127.0.0.1:5984/media/_design/media/_view/movies';
   } else if (filter === 'journals') {
-    url = 'http://localhost:5984/media/_design/media/_view/journals';
+    url = 'http://127.0.0.1:5984/media/_design/media/_view/journals';
   } else if (filter === 'games') {
-    url = 'http://localhost:5984/media/_design/media/_view/games';
+    url = 'http://127.0.0.1:5984/media/_design/media/_view/games';
   }
 
   const options = {

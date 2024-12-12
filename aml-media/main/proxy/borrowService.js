@@ -5,8 +5,8 @@ const { couchdbUsername, couchdbPassword } = require('./utils');
 
 router.post('/borrow_media', (req, res) => {
   const { mediaId, userId } = req.body;
-  const mediaUrl = `http://localhost:5984/media/${mediaId}`;
-  const userUrl = `http://localhost:5984/users/${userId}`;
+  const mediaUrl = `http://127.0.0.1:5984/media/${mediaId}`;
+  const userUrl = `http://127.0.0.1:5984/users/${userId}`;
 
   // Get media document
   request({

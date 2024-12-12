@@ -7,7 +7,7 @@ router.get('/user_media', (req, res) => {
   const userId = req.query.user_id;
   const limit = parseInt(req.query.limit, 10) || 10; // Default limit to 10
   const skip = parseInt(req.query.skip, 10) || 0; // Default skip to 0
-  const userUrl = `http://localhost:5984/users/_design/user_index/_view/media_ids?key="${userId}"&limit=${limit}&skip=${skip}`;
+  const userUrl = `http://127.0.0.1:5984/users/_design/user_index/_view/media_ids?key="${userId}"&limit=${limit}&skip=${skip}`;
 
   console.log(`Fetching user media IDs from URL: ${userUrl}`);
 
@@ -38,7 +38,7 @@ router.get('/user_media', (req, res) => {
         acc[item[0]] = item[1];
         return acc;
       }, {});
-      const mediaUrl = `http://localhost:5984/media/_design/media/_view/by_user_media_ids?keys=${JSON.stringify(mediaIds)}&limit=${limit}&skip=${skip}`;
+      const mediaUrl = `http://127.0.0.1:5984/media/_design/media/_view/by_user_media_ids?keys=${JSON.stringify(mediaIds)}&limit=${limit}&skip=${skip}`;
 
       console.log(`fetching media`);
 
@@ -73,7 +73,7 @@ router.get('/user_media', (req, res) => {
 
 router.post('/get_user_id', (req, res) => {
   const email = req.body.email;
-  const userUrl = `http://localhost:5984/users/_find`;
+  const userUrl = `http://127.0.0.1:5984/users/_find`;
 
   console.log(`Fetching user ID for email: ${email}`);
 

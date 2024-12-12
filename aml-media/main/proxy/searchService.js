@@ -35,7 +35,7 @@ router.post('/', (req, res) => {
   console.log(`Search query: ${query} in view: ${view}`);
 
   const options = {
-    url: 'http://localhost:5984/media/_find',
+    url: 'http://127.0.0.1:5984/media/_find',
     method: 'POST',
     auth: {
       user: couchdbUsername,
