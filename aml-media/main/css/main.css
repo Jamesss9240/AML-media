@@ -1,0 +1,265 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+h3 {
+    color: #4a4a4a;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* Navbar */
+#nav {
+    background-color: #6200ea;
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.viewbox {
+    margin-left: 20px;
+    display: flex;
+    justify-content: flex-start;
+
+}
+#carousel-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    max-width: 800px;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 15px;           /* Rounded corners */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  }
+  
+  /* Style for the carousel */
+  #carouselAutoPlay {
+    width: 100%;
+    position: relative;
+  }
+  
+  /* Ensure images cover the full width and have a consistent height */
+  #carouselAutoPlay .carousel-inner img {
+    width: 100%;
+    height: 450px;                /* Set a fixed height for consistency */
+    object-fit: cover;            /* Crop image to fit the area nicely */
+    border-radius: 15px;          /* Rounded corners on images */
+  }
+  
+  /* Navigation controls (next/prev buttons) */
+  #carouselAutoPlay .carousel-control-prev,
+  #carouselAutoPlay .carousel-control-next {
+    width: 5%;                    /* Smaller width for controls */
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+  }
+  
+  #carouselAutoPlay .carousel-control-prev:hover,
+  #carouselAutoPlay .carousel-control-next:hover {
+    opacity: 1;
+  }
+  
+  /* Custom icons for controls */
+  #carouselAutoPlay .carousel-control-prev-icon,
+  #carouselAutoPlay .carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    border-radius: 50%;
+    padding: 10px;
+  }
+  
+  /* Indicators (dots below the carousel) */
+  #carouselAutoPlay .carousel-indicators {
+    bottom: 10px;
+  }
+  
+  #carouselAutoPlay .carousel-indicators button {
+    background-color: #6200ea;    /* Match your theme color */
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;           /* Circular indicators */
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+  }
+  
+  #carouselAutoPlay .carousel-indicators button.active {
+    opacity: 1;                   /* Highlight the active indicator */
+  }
+  
+  /* Smooth transition effect */
+  .carousel-inner {
+    transition: transform 1s ease-in-out;
+  }
+  
+
+/* Booklist grid */
+#media-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 200px));
+  gap: 20px;
+  margin: 20px;
+  padding: 10px;
+  justify-content: center;
+}
+
+.media-item {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.media-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.media-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.media-item h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.media-item p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+button.borrow-button,
+button.return-button {
+    background-color: #6200ea;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+button.borrow-button:hover,
+button.return-button:hover {
+    background-color: #4500a6;
+}
+
+/* View selector */
+.view-selector {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.view-selector label {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.view-selector select {
+    font-size: 1rem;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Login button */
+.loginbtn {
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    background-color: #6200ea;
+    color: #fff;
+    padding: 15px 30px;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.loginbtn:hover {
+    background-color: #4500a6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #media-container {
+        grid-template-columns: 1fr;
+    }
+
+    .loginbtn {
+        font-size: 1rem;
+        padding: 10px 20px;
+    }
+}
+/* User Media View Button */
+#user-media-btn {
+    background-color: #6200ea;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    transition: background-color 0.3s ease;
+  }
+  
+  #user-media-btn:hover {
+    background-color: #4500a6;
+  }
+  
+  /* Pagination Buttons */
+  .pagination {
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  .pagination button {
+    background-color: #6200ea;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .pagination button:hover:not(:disabled) {
+    background-color: #4500a6;
+  }
+  
+  /* Page Info Text */
+  #page-info {
+    font-size: 1rem;
+    color: #4a4a4a;
+    margin: 0 10px;
+    display: inline-block;
+  }
+  

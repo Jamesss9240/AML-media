@@ -1,0 +1,291 @@
+<style>
+  
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,500;0,600;1,400;1,600&display=swap');
+
+.header .header-1 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 9%;
+    background: #ffffff;
+}
+
+.view-selector {
+    margin-right: 0px; 
+    display: flex;
+    align-items: center;
+    
+}
+
+.header .header-1 .search-form {
+    width: 50rem;
+    height: 6rem;
+    display: flex;
+    align-items: center;
+    border: var(--border);
+    background-color: #f9f9f9;
+    border-radius: 2rem;
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    max-width: 100%;
+    margin-left: 0; 
+}
+
+      .navbarr{
+        background-color: blueviolet;
+        color: aliceblue;
+        padding: 30px;
+        margin: 0%;
+      }
+  
+      body{
+        margin: 0;
+        padding: 0;
+      }
+  
+      ul{
+        list-style: none;
+        display: flex;
+        font-size: larger;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+  
+      ul.hover{
+        background-color: var(--dark-color) ;
+      }
+  
+      .navv{
+          display: flex;
+          flex-direction: row;  
+      }
+  
+      .innerr-list li{
+        margin: 0px 10px 0px 10px;;
+      }
+  
+  :root{
+      --orange:#8b11a3;
+      --dark-color:#810c72;
+      --black:#444;
+      --light-color:#666;
+      --border:0.1rem solid rgba(0,0,0,0.1);
+      --border-hover:0.1rem solid var(--black);
+      --box-shadow:0 0.5rem 1rem rgba(0,0,0,0.1);
+  }
+  
+  *{
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      box-sizing: border-box;
+      outline: none;
+      border: none;
+      text-decoration: none;
+      text-transform: capitalize;
+      transition: all .2s linear;
+      transition: width none;
+  }
+  
+  html{
+      font-size: 62.5%;
+      overflow-X: hidden;
+      scroll-padding-top: 5rem;
+      scroll-behavior: smooth;
+  }
+  
+  html::-webkit-scrollbar{
+      width: 1rem;
+  }
+  
+  html::-webkit-scrollbar-track{
+      background: transparent;
+  }
+  
+  html::-webkit-scrollbar-thumb{
+      background: var(--black);
+  }
+  
+  .header .header-1{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 9%;
+      background: #ffffff;
+  }
+  
+  .header .header-1 .logo{
+      font-size: 2.5rem;
+      font-weight: bolder;
+      color: var(--black);
+  }
+  
+  .header .header-1 .logo i{
+      color: var(--purple);
+  
+  }
+  
+  .header .header-1 .search-form{
+    width: 50rem;
+    height: 6rem;
+    display: flex;
+    align-items: center;
+    border: var(--border);
+    background-color: #f9f9f9;
+    border-radius: 2rem;
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    max-width: 100%;
+  }
+  
+  .header .header-1 .search-form input{
+      font-size: 1.6rem;
+      padding: 0 1.2rem;
+      height: 100%;
+      width: 100%;
+      text-transform: none;
+      color: var(--black);
+  }
+  
+  .header .header-1 .search-form label{
+      font-size: 2.5rem;
+      padding-right: 1.5rem;
+      color: var(--black);
+      cursor: pointer;
+  }
+  
+  .header .header-1 .icons div,
+  .header .header-1 .icons a{
+      font-size: 2.5rem;
+      margin-left: 1.5rem;
+      color: var(--black);
+      cursor: pointer;
+  }
+  
+  #search-btn{
+      display: none;
+  }
+  
+  /* Responsive Design */
+@media (max-width: 768px) {
+  .header .header-1 {
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .header .header-1 .search-form {
+    width: 100%;
+  }
+
+  .header .header-1 .icons {
+    justify-content: center;
+  }
+
+  .navbarr {
+    padding: 1rem;
+  }
+
+  .navv {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .innerr-list {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header .header-1 .logo {
+    font-size: 2rem;
+  }
+
+  .header .header-1 .search-form input {
+    font-size: 1.4rem;
+  }
+
+  .header .header-1 .search-form label {
+    font-size: 1.8rem;
+  }
+
+  .header .header-1 .icons a {
+    font-size: 2rem;
+  }
+}
+  </style>
+  
+  <header class="header">
+  
+    <div class="header-1">
+  
+        <a href="" class="logo"><i class="fas fa-book">AML Library</i></a>
+        <div class="view-selector">
+    <label class="viewbox" for="view-select">Choose a view:</label>
+    <select id="view-select"  class="viewbox" onchange="changeView(this.value)">
+      <option value="all_media">All Media View</option>
+      <option value="books">Books View</option>
+      <option value="journals">Journal View</option>  
+      <option value="films">Film View</option>
+      <option value="games">Games View</option>
+    </select>
+  </div>
+        <form action="" class="search-form">
+            <input type="search" name="" placeholder="search here for media..." id="search-box">
+            <label for="search-box" class="fas fa-search"></label>
+            <script>
+              document.querySelector('.search-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+                const query = document.querySelector('#search-box').value;
+                const view = document.querySelector('#view-select').value;
+                fetch(`https://127.0.0.1:3000/search`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ query: query, view: view })
+                })
+                .then(response => response.json())
+                .then(data => {
+                  const mediaContainer = document.querySelector('#media-container');
+                  if (!mediaContainer) {
+                    console.error('Error: mediaContainer element not found');
+                    return;
+                  }
+                  mediaContainer.innerHTML = ''; // Clear previous results
+                  data.docs.forEach(media => {
+                    const mediaElement = document.createElement('div');
+                    mediaElement.classList.add('media-item');
+                    mediaElement.innerHTML = `
+                      <h3>${media.title}</h3>
+                      <p>${media.description}</p>
+                      <img src="${media.url}" alt="${media.title}" />
+                    `;
+                    mediaContainer.appendChild(mediaElement);
+                  });
+                })
+                .catch(error => {
+                  console.error('Error:', error);
+                });
+              });
+            </script>
+          </form>
+  
+        <div class="icons">
+            <div id="search-btn" class="fas fa-search"></div>
+            <a href="UserProfile.html" id="login-btn" class="fas fa-user"></a>
+        </div>
+</div>
+</div>
+  
+  <div class="navbarr">
+      <ul class="navv">
+          <li></li>
+          <li><ul class="innerr-list">
+              <li>home</li>
+              <li>locations</li>
+              <li>contact us</li>
+          </ul></li>
+  </div>

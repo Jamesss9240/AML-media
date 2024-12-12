@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>AML Library</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
+</head>
+
+<body>
+  
+  <div id="nav"></div>
+  
+  <div id="carousel-container">
+    <div id="carouselAutoPlay" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="images/blog-2.jpg" alt="image of books" />
+        </div>
+        <div class="carousel-item">
+          <img src="images/books.webp" alt="image of books" />
+        </div>
+        <div class="carousel-item">
+          <img src="images/blog-3.jpg" alt="image of books" />
+        </div>
+        <div class="carousel-item">
+          <img src="images/blog-1.jpg" alt="image of books" />
+        </div>
+      </div>
+  
+      <!-- Carousel -->
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselAutoPlay" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#carouselAutoPlay" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#carouselAutoPlay" data-bs-slide-to="2"></button>
+        <button type="button" data-bs-target="#carouselAutoPlay" data-bs-slide-to="3"></button>
+      </div>
+  
+      <!-- Navigation Controls -->
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselAutoPlay" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselAutoPlay" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+  
+
+    <button id="user-media-btn" onclick="toggleUserMediaView()">User Media View</button>
+   
+    <div class="booklist">
+      <div id="media-container"></div>
+     
+      <div class="pagination">
+        <button id="prev-page" onclick="prevPage()">Previous</button>
+        <span id="page-info"></span>
+        <button id="next-page" onclick="nextPage()">Next</button>
+      </div>
+      <script>
+        let currentPage = 1;
+        const itemsPerPage = 10;
+
+        async function loadMedia(filter = '', page = 1) {
+          try {
+            const response = await fetch(`https://127.0.0.1:3000/media?filter=${filter}&page=${page}&limit=${itemsPerPage}`);
+            const data = await response.json();
+            
+            if (!data.rows) {
+              throw new Error('Invalid data format received');
+            }
+
+            const mediaContainer = document.getElementById('media-container');
+            mediaContainer.innerHTML = ''; 
+            data.rows.forEach(row => {
+              const media = row.value;
+              const mediaElement = document.createElement('div');
+              mediaElement.className = 'media-item';
+              mediaElement.innerHTML = `
+                  <h3>${media.title}</h3>
+                  <p>${media.description}</p>
+                  <p>Quantity in stock: ${media.quantity}</p>
+                  <img src="${media.url}" alt="${media.title}" />
+                  <button class="borrow-button" onclick="borrowMedia('${row.id}')">Borrow Media</button>
+                `;
+              mediaContainer.appendChild(mediaElement);
+            });
+
+            updatePagination(data.totalPages, page);
+          } catch (error) {
+            console.error('Error loading media:', error);
+            alert('Failed to load media');
+          }
+        }
+
+        async function loadUserMedia(userId, page = 1) {
+          try {
+            const response = await fetch(`https://127.0.0.1:3000/user/user_media?user_id=${userId}&page=${page}&limit=${itemsPerPage}`);
+            const data = await response.json();
+            
+            const mediaContainer = document.getElementById('media-container');
+            mediaContainer.innerHTML = ''; 
+
+            if (!data.rows || data.rows.length === 0) {
+              const mediaElement = document.createElement('div');
+              mediaElement.className = 'media-item';
+              mediaElement.innerHTML = `<h3>No media found</h3>`;
+              mediaContainer.appendChild(mediaElement);
+              return;
+            }
+
+            data.rows.forEach(row => {
+              const media = row.value;
+              const returnDate = new Date(media.return_date * 1000).toLocaleDateString();
+              const mediaElement = document.createElement('div');
+              mediaElement.className = 'media-item';
+              mediaElement.innerHTML = `
+                  <h3>${media.title}</h3>
+                  <p>${media.description}</p>
+                  <p>Return Date: ${returnDate}</p>
+                  <img src="${media.url}" alt="${media.title}" />
+                  <button class="return-button" onclick="returnMedia('${row.id}', '${userId}')">Return Media</button>
+                `;
+              mediaContainer.appendChild(mediaElement);
+            });
+
+            updatePagination(data.totalPages, page);
+          } catch (error) {
+            console.error('Error loading user media:', error);
+            alert('Failed to load user media');
+          }
+        }
+
+        async function returnMedia(mediaId, userId) {
+          try {
+            const response = await fetch(`https://127.0.0.1:3000/return/return_media`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ mediaId: mediaId, userId: userId })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+              alert('Return success.');
+              
+              const dateNow = Math.floor(Date.now() / 1000);
+              
+              loadUserMedia(userId); 
+              if (data.returnDate < dateNow) {
+                try {
+                  const lateResponse = await fetch(`https://127.0.0.1:3000/return/late_return`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ mediaId: mediaId, userId: userId })
+                  });
+                  const lateData = await lateResponse.json();
+                 
+                  if (lateData.success) {
+                    alert('Late return processed.');
+                  }
+                } catch (error) {
+                  console.error('Late return error:', error);
+                }
+              }
+            } else {
+              alert('Return failed.');
+            }
+          } catch (error) {
+            console.error('Return error:', error);
+            alert('Failed to return media.');
+          }
+        }
+
+        async function borrowMedia(mediaId) {
+          const email = prompt('Please enter your email:');
+          if (email) {
+            const userId = await getUserIdByEmail(email);
+            if (userId) {
+              try {
+                const response = await fetch(`https://127.0.0.1:3000/borrow/borrow_media`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ mediaId: mediaId, userId: userId })
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                  alert('Borrow success.');
+                  loadMedia(''); 
+                } else {
+                  alert('Borrow failed.');
+                }
+              } catch (error) {
+                console.error('Borrow error:', error);
+                alert('Borrow failed.');
+              }
+            }
+          }
+        }
+
+        async function getUserIdByEmail(email) {
+          try {
+            const response = await fetch(`https://127.0.0.1:3000/user/get_user_id`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ email: email })
+            });
+
+            if (!response.ok) {
+              const errorText = await response.text();
+              console.error('Server response:', errorText);
+              throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+            }
+
+            const data = await response.json();
+            
+            if (data.userId) {
+              return data.userId;
+            } else {
+              throw new Error('User not found');
+            }
+          } catch (error) {
+            console.error('Detailed error:', error);
+            alert(`Error: ${error.message}. Check email (test email is TestJames@email.com). IT IS CASE SENSITIVE`);
+            return null;
+          }
+        }
+//pagination
+        function updatePagination(totalPages, currentPage) {
+          document.getElementById('page-info').innerText = `Page ${currentPage} of ${totalPages}`;
+          document.getElementById('prev-page').disabled = currentPage === 1;
+          document.getElementById('next-page').disabled = currentPage === totalPages;
+        }
+
+        function prevPage() {
+          if (currentPage > 1) {
+            currentPage--;
+            changeView(document.getElementById('view-select').value, currentPage);
+          }
+        }
+
+        function nextPage() {
+          currentPage++;
+          changeView(document.getElementById('view-select').value, currentPage);
+        }
+
+        async function changeView(view, page = 1) {
+          currentPage = page;
+          if (view === 'user_media') {
+            const email = prompt('Please enter your email:');
+            if (email) {
+              const userId = await getUserIdByEmail(email);
+              if (userId) {
+                loadUserMedia(userId, page);
+              }
+            }
+          } else {
+            loadMedia(view === 'all_media' ? '' : view, page);
+          }
+        }
+
+        async function toggleUserMediaView() {
+          const email = prompt('Please enter your email:');
+          if (email) {
+            const userId = await getUserIdByEmail(email);
+            if (userId) {
+              loadUserMedia(userId);
+            }
+          }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+          loadMedia(''); 
+        });
+      </script>
+    </div>
+  </div>
+
+  <a class="loginbtn" href="login.html" role="link">Login/Sign up Here to Enjoy all of amls facilities</a>
+ 
+</body>
+</html>
+
+<script>
+  $(function () {
+    $("#nav").load("nav.html");
+  });
+</script>
