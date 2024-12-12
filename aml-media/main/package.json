@@ -1,0 +1,40 @@
+{
+  "name": "aml-media",
+  "version": "1.0.0",
+  "description": "aml media library website",
+  
+  "main": "proxy.js",
+  "scripts": {
+    "test": "jest",
+    "start": "http-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jamesss9240/AML-media.git"
+  },
+  "keywords": [
+    "media"
+  ],
+  "author": "James,Ethan,Tasnim,harvey",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/Jamesss9240/AML-media/issues"
+  },
+  "homepage": "https://github.com/Jamesss9240/AML-media#readme",
+  "devDependencies": {
+    "chai": "^5.1.2",
+    "chai-http": "^5.1.1",
+    "http-server": "^14.1.1",
+    "mocha": "^11.0.1",
+    "puppeteer": "^10.0.0",
+    "jest": "^27.0.0"
+  },
+  "dependencies": {
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "openssl": "^2.0.0",
+    "pouchdb": "^9.0.0",
+    "puppeteer": "^10.0.0",
+    "jest": "^27.0.0"
+  }
+}
