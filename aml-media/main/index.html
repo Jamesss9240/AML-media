@@ -159,6 +159,8 @@
 
             if (data.success) {
               alert('Return success.');
+              //return success message, log allows puppeteer testing to read it easily
+              console.log('Return success');
               
               const dateNow = Math.floor(Date.now() / 1000);
               
@@ -206,7 +208,9 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                  alert('Borrow success.');
+                  alert('Borrow success.'); 
+                  //borrow success message, log allows puppeteer testing to read it easily
+                  console.log('Borrow success'); 
                   loadMedia(''); 
                 } else {
                   alert('Borrow failed.');
