@@ -5,8 +5,8 @@
 // // Get media
 // router.get('/media', (req, res) => {
 //   const filter = req.query.filter;
-//   const url = filter === 'books' 
-//     ? 'http://127.0.0.1:5984/media/_design/media/_view/books' 
+//   const url = filter === 'books'
+//     ? 'http://127.0.0.1:5984/media/_design/media/_view/books'
 //     : 'http://127.0.0.1:5984/media/_design/media/_view/all_media';
 
 //   couchRequest({ url, method: 'GET' }, (err, body) => {
