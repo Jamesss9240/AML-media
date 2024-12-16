@@ -24,7 +24,7 @@ func GenerateSessionToken(email string, role string) (string, error) {
 	// you would like it to contain.
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"iss":        "AML",
-		"exp":        time.Now().UTC().Add(10 * time.Minute).Unix(),
+		"exp":        time.Now().UTC().Add(60 * time.Minute).Unix(),
 		"iat":        time.Now().UTC().Unix(),
 		"nbf":        time.Now().UTC().Unix(),
 		"authorised": true,

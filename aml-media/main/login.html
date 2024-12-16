@@ -68,6 +68,14 @@
               if (data.message === "Login request was successful!") {
                 alert('login was successful')
                 window.location.href = "/";
+                // Set a secure cookie
+          			// Get the current date and time
+			          let now = new Date();
+                // Set the expiration time to one hour from now
+                now.setTime(now.getTime() + (1 * 60 * 60 * 1000));
+                // Convert the expiration time to a UTC string
+                let expires = now.toUTCString();
+                document.cookie = "token="+data.token+"; expires="+expires+"; path=/; domain=127.0.0.1; Secure; SameSite=Strict";
               }
             }).catch(error => console.error("Error:", error));
         }

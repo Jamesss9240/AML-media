@@ -113,9 +113,9 @@ func performLogin(c *gin.Context) {
 		// unless you're using a million bit keys and 5 layers of enecryption for some godforsaken reason
 		if token != "" {
 			log.Info("Form data", zap.String("email", JUL.Email), zap.String("password", JUL.Password))
-			c.SetCookie("token", token, 3600, "", "localhost", true, true)
+			// c.SetCookie("token", token, 3600, "", "localhost", true, true)
 			c.Set("authenticated", true)
-			c.JSON(http.StatusOK, gin.H{"message": "Login request was successful!"})
+			c.JSON(http.StatusOK, gin.H{"message": "Login request was successful!", "token": token})
 		}
 	}
 }
