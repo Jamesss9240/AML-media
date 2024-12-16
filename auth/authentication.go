@@ -36,7 +36,7 @@ func TryLoginUser(email string, password string) (string, error) {
 		log.Error("Compare hash error", zap.Error(err))
 		return "", errors.New(ErrIncorrectPassword)
 	}
-	token, err := GenerateSessionToken(email)
+	token, err := GenerateSessionToken(email, User.Role)
 	if err != nil {
 		log.Error("Error generating token while trying to login", zap.Error(err))
 		return "", err

@@ -31,9 +31,9 @@ func showSignupPage(c *gin.Context) {
 	Render(c, gin.H{"title": "AML - Signup"}, "signup.html")
 }
 
-func ShowIndexPage(c *gin.Context) {
-	Render(c, gin.H{"title": "AML - Home"}, "index.html")
-}
+// func ShowIndexPage(c *gin.Context) {
+// 	Render(c, gin.H{"title": "AML - Home"}, "index.html")
+// }
 
 func performLogin(c *gin.Context) {
 	log.Debug("peformlogin")
@@ -246,57 +246,4 @@ func performSignup(c *gin.Context) {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
-}
-
-type InternalJWTVerify struct {
-	JWT string `json:"jwt" binding:"required"`
-}
-
-func verify(c *gin.Context) {
-	var JWTVerify = new(InternalJWTVerify)
-	err := c.ShouldBindJSON(&JWTVerify)
-	if err != nil {
-		log.Error("Error binding JSON for InternalJWTVerify", zap.Error(err))
-		c.JSON(http.StatusBadRequest, gin.H{})
-		return
-	}
-}
-
-// Demoted to the bottom, not important but the code could be reused
-func showPersonalDetails(c *gin.Context) {
-	// token, err := c.Cookie("token") // Get token cookie
-	// if err != nil {
-	// 	log.Println(err)
-	// 	c.HTML(http.StatusBadRequest, "login.html", gin.H{
-	// 		"ErrorTitle":   "Login Failed",
-	// 		"ErrorMessage": "Invalid credentials provided",
-	// 	})
-	// 	return
-	// }
-	// MID, err := db.QueryMemberIDByToken(token) // Get member ID by token
-	// if err != nil {
-	// 	c.HTML(http.StatusBadRequest, "login.html", gin.H{
-	// 		"ErrorTitle":   "Login Failed",
-	// 		"ErrorMessage": "Invalid credentials provided",
-	// 	})
-	// 	return
-	// }
-	// M, err := db.QueryMemberInfoByID(MID) // Get Member row by ID
-	// if err != nil {
-	// 	c.HTML(http.StatusBadRequest, "login.html", gin.H{
-	// 		"ErrorTitle":   "Login Failed",
-	// 		"ErrorMessage": "Invalid credentials provided",
-	// 	})
-	// 	return
-	// }
-	Render(c, gin.H{
-		// "fname": M.FirstName,
-		// "lname": M.LastName,
-		// "email": M.Email,
-		// "date":  M.DateOfBirth,
-		"fname": "Unavailable",
-		"lname": "Unavailable",
-		"email": "Unavailable",
-		"date":  "Unavailable",
-	}, "personal-details.html")
 }

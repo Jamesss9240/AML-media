@@ -12,7 +12,6 @@ import (
 
 // In a real application the DB password wouldn't be stored the way it is I would store it in an environment variable and have it encrypted so the
 // application can decrypt with a private key that's stored in an embed when ran but since we're using this across a team and to make our lives easier it is instead plaintext here
-//
 
 const (
 	ErrConnectingtoCDB   = "couldn't connect to CouchDB"
@@ -31,29 +30,23 @@ type User struct {
 	Role      string `json:"role"`
 }
 
-// func CDBtest() {
-// 	client, err := kivik.New("couch", "http://admin:Dexter233@localhost:5984/")
-// 	if err != nil {
-// 		log.Error("kivik create DB con", zap.Error(err))
-// 		panic(err)
-// 	}
-
-// 	db := client.DB("users")
-
-// 	doc := map[string]interface{}{
-// 		// "_id":      "0",
-// 		"email":     "ejh@gmail.com",
-// 		"firstname": "Ethan",
-// 		"lastname":  "Hemingway",
-// 		"password":  "BlahBlah",
-// 	}
-
-// 	rev, err := db.Put(context.TODO(), "ejh@gmail.com", doc)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	fmt.Printf("User inserted with revision %s\n", rev)
-// }
+func CDBCheck() {
+	client, err := kivik.New("couch", "http://admin:Dexter233@localhost:5984/")
+	if err != nil {
+		log.Error("kivik create DB con", zap.Error(err))
+		panic(err)
+	}
+	db := client.DB("users")
+	if db.Err() != nil || db == nil {
+		log.Error("Users db does not exist! Attempting to create, please enter data into db at http://127.0.0.1:5984/_utils")
+		err := client.CreateDB(context.TODO(), "users")
+		if err != nil {
+			panic("Failed to create db")
+		}
+	} else {
+		log.Info("Users db found")
+	}
+}
 
 func CDBGetUserByEmail(email string) (*User, error) {
 	var TU *User
@@ -82,7 +75,7 @@ func CDBGetUserByEmail(email string) (*User, error) {
 	return TU, nil
 }
 
-func CDBRegisterUser(email string, firstname string, lastname string, password string) error {
+func CDBRegisterUser(email, firstname, lastname, password string) error {
 	client, err := kivik.New("couch", "http://admin:Dexter233@localhost:5984/")
 	if err != nil {
 		log.Error("kivik create DB con", zap.Error(err))
