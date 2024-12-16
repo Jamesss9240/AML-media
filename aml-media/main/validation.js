@@ -79,9 +79,11 @@ allInputs.forEach(input => {
   })
 })
 
+//references
 //https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model
 //https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction
 //https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Traversing_an_HTML_table_with_JavaScript_and_DOM_Interfaces
+//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function
 //https://stackoverflow.com/questions/15864606/forms-and-getelementbyid
 //https://forum.freecodecamp.org/t/form-validation-with-js/439712
 //Help from cousin with javascript
