@@ -109,7 +109,7 @@
 
         async function loadUserMedia(userId, page = 1) {
           try {
-            const response = await fetch(`https://127.0.0.1:3000/user/user_media?user_id=${userId}&page=${page}&limit=${itemsPerPage}`);
+            const response = await fetch(`https://127.0.0.1:3000/fetch-media/?page=${page}&limit=${itemsPerPage}`);
             const data = await response.json();
             
             const mediaContainer = document.getElementById('media-container');
@@ -193,61 +193,32 @@
         }
 
         async function borrowMedia(mediaId) {
-          
-          
-            const userId = await getUserIdByEmail();
-            if (userId) {
-              try {
-                const response = await fetch(`https://127.0.0.1:3000/borrow/borrow_media`, {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({ mediaId: mediaId, userId: userId })
-                });
-                const data = await response.json();
-                
-                if (data.success) {
-                  alert('Borrow success.'); 
-                  //borrow success message, log allows puppeteer testing to read it easily
-                  console.log('Borrow success'); 
-                  loadMedia(''); 
-                } else {
-                  alert('Borrow failed.');
-                }
-              } catch (error) {
-                console.error('Borrow error:', error);
-                alert('Borrow failed.');
-              }
+          try {
+            
+            const response = await fetch(`https://127.0.0.1:3000/borrow/borrow_media`,   {
+              method: 'POST',
+              credentials: 'include',
+              headers: {
+          'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ mediaId: mediaId })
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+              alert('Borrow success.'); 
+              console.log('Borrow success'); 
+              loadMedia(''); 
+            } else {
+              alert('Borrow failed.');
             }
-          
+          } catch (error) {
+            console.error('Borrow error:', error);
+            alert('Borrow failed.');
+          }
         }
 
-        async function getUserIdByEmail() {
-          try {
-          // Parse the token cookie
-            const token = document.cookie.split('; ')
-            .find(row => row.startsWith('token='))
-            ?.split('=')[1];
-
-              if (!token) {
-      throw new Error('No authentication token found');
-    }
-
-    // Decode the token (assuming it's a JWT or contains the userId)
-    const tokenPayload = JSON.parse(atob(token.split('.')[1]));
-    
-    if (!tokenPayload.userId) {
-      throw new Error('User ID not found in token');
-    }
-
-    return tokenPayload.userId;
-  } catch (error) {
-    console.error('Detailed error:', error);
-    alert(`Error: ${error.message}. Ensure you are logged in and have a valid token.`);
-    return null;
-  }
-}
+       
 //pagination
         function updatePagination(totalPages, currentPage) {
           document.getElementById('page-info').innerText = `Page ${currentPage} of ${totalPages}`;
@@ -271,7 +242,7 @@
           currentPage = page;
           if (view === 'user_media') {
             
-              const userId = await getUserIdByEmail();
+              const userId = 2;
               if (userId) {
                 loadUserMedia(userId, page);
               
@@ -284,7 +255,7 @@
         async function toggleUserMediaView() {
           
           
-            const userId = await getUserIdByEmail();
+            const userId = 2;
             if (userId) {
               loadUserMedia(userId);
             }
