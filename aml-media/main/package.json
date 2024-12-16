@@ -28,6 +28,7 @@
     "puppeteer": "^23.10.4"
   },
   "dependencies": {
+    "cookie-parser": "^1.4.7",
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "openssl": "^2.0.0",

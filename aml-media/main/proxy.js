@@ -2,6 +2,7 @@ const express = require('express');
 const https = require('https');
 const fs = require('fs');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const path = require('path');
 const mediaService = require('./proxy/mediaService');
@@ -22,12 +23,26 @@ const sslOptions = {
   cert: fs.readFileSync('certificates/cert.pem'),
  
 };
+const allowedOrigins = ['https://127.0.0.1:8080', 'https://127.0.0.1:8081','https://127.0.0.1:3000'];
+// CORS configuration
+const corsOptions = {
+  origin: (origin, callback) => {
+      // Check if the incoming origin is in the allowedOrigins list
+      if (allowedOrigins.includes(origin) || !origin) {
+          callback(null, true);
+      } else {
+          callback(new Error('Not allowed by CORS'));
+      }
+  },
+  credentials: true // Allow credentials (cookies) to be sent
+};
 
-
+// Use the CORS middleware with the specified options
+app.use(cors(corsOptions));
 
 // cors handling
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  // res.header('Access-Control-Allow-Origin', ['https://127.0.0.1:8080', 'https://127.0.0.1:8081','https://127.0.0.1:3000']);
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   if (req.method === 'OPTIONS') {
@@ -35,6 +50,7 @@ app.use((req, res, next) => {
   }
   next();
 });
+app.use(cookieParser());
 
 // middleware
 app.use(bodyParser.json());

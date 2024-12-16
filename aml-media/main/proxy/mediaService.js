@@ -4,6 +4,9 @@ const router = express.Router();
 const { couchdbUsername, couchdbPassword } = require("./utils");
 
 router.get("/", (req, res) => {
+  const token = req.cookies.token;
+  console.log('Token:', token);
+  console.log('t', req.cookies);
   const filter = req.query.filter;
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
