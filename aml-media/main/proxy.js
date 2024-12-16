@@ -23,16 +23,7 @@ const sslOptions = {
  
 };
 
-// // Configure CORS to allow requests from 127.0.0.1:8081
-// const corsOptions = {
-//   origin: '*',
-//   optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
-// };
 
-// // Apply CORS middleware to the /login endpoint
-// app.post('/login', cors(corsOptions), (req, res) => {
-//   res.send('CORS policy for /login is set!');
-// });
 
 // cors handling
 app.use((req, res, next) => {

@@ -193,9 +193,9 @@
         }
 
         async function borrowMedia(mediaId) {
-          const email = prompt('Please enter your email:');
-          if (email) {
-            const userId = await getUserIdByEmail(email);
+          
+          
+            const userId = await getUserIdByEmail();
             if (userId) {
               try {
                 const response = await fetch(`https://127.0.0.1:3000/borrow/borrow_media`, {
@@ -220,38 +220,34 @@
                 alert('Borrow failed.');
               }
             }
-          }
+          
         }
 
-        async function getUserIdByEmail(email) {
+        async function getUserIdByEmail() {
           try {
-            const response = await fetch(`https://127.0.0.1:3000/user/get_user_id`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ email: email })
-            });
+          // Parse the token cookie
+            const token = document.cookie.split('; ')
+            .find(row => row.startsWith('token='))
+            ?.split('=')[1];
 
-            if (!response.ok) {
-              const errorText = await response.text();
-              console.error('Server response:', errorText);
-              throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-            }
+              if (!token) {
+      throw new Error('No authentication token found');
+    }
 
-            const data = await response.json();
-            
-            if (data.userId) {
-              return data.userId;
-            } else {
-              throw new Error('User not found');
-            }
-          } catch (error) {
-            console.error('Detailed error:', error);
-            alert(`Error: ${error.message}. Check email (test email is TestJames@email.com). IT IS CASE SENSITIVE`);
-            return null;
-          }
-        }
+    // Decode the token (assuming it's a JWT or contains the userId)
+    const tokenPayload = JSON.parse(atob(token.split('.')[1]));
+    
+    if (!tokenPayload.userId) {
+      throw new Error('User ID not found in token');
+    }
+
+    return tokenPayload.userId;
+  } catch (error) {
+    console.error('Detailed error:', error);
+    alert(`Error: ${error.message}. Ensure you are logged in and have a valid token.`);
+    return null;
+  }
+}
 //pagination
         function updatePagination(totalPages, currentPage) {
           document.getElementById('page-info').innerText = `Page ${currentPage} of ${totalPages}`;
@@ -274,12 +270,11 @@
         async function changeView(view, page = 1) {
           currentPage = page;
           if (view === 'user_media') {
-            const email = prompt('Please enter your email:');
-            if (email) {
-              const userId = await getUserIdByEmail(email);
+            
+              const userId = await getUserIdByEmail();
               if (userId) {
                 loadUserMedia(userId, page);
-              }
+              
             }
           } else {
             loadMedia(view === 'all_media' ? '' : view, page);
@@ -287,14 +282,14 @@
         }
 
         async function toggleUserMediaView() {
-          const email = prompt('Please enter your email:');
-          if (email) {
-            const userId = await getUserIdByEmail(email);
+          
+          
+            const userId = await getUserIdByEmail();
             if (userId) {
               loadUserMedia(userId);
             }
           }
-        }
+        
 
         document.addEventListener('DOMContentLoaded', () => {
           loadMedia(''); 
