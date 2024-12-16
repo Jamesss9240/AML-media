@@ -17,7 +17,7 @@ const (
 	ErrTokenTamper    = "token potentially tampered"
 )
 
-var HKey = []byte{0, 48, 28, 48, 13, 34, 64, 84, 7, 32, 1, 6, 8, 47, 3, 7, 90, 255, 82, 205, 157, 10, 8, 34, 55, 143, 63, 99, 208, 20, 134, 166}
+var HKey = []byte("AML_Media_2024_HMACKEY_Random_Jelly_Crop")
 
 func GenerateSessionToken(email string, role string) (string, error) {
 	// Create a new token object, specifying signing method and the claims
