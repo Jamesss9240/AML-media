@@ -1,53 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
-    <link rel="stylesheet" href="style.css" />
-    <script type="text/javascript" src="validation.js" defer></script>
-  </head>
-  <body>
-    <div class="wrapper">
-      <h1>Login</h1>
-      <p id="error-message"></p>
-      <form id="form">
-        <div>
-          <label for="email-input">
-            <span>@</span>
-          </label>
-          <input
-            type="email"
-            name="email"
-            id="email-input"
-            placeholder="Email"
-          />
-        </div>
-        <div>
-          <label for="password-input">
-            <svg
-              xmlns="https://www.w3.org/2000/svg"
-              height="24"
-              viewBox="0 -960 960 960"
-              width="24"
-            >
-              <path
-                d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240Zm240-200q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80Z"
-              />
-            </svg>
-          </label>
-          <input
-            type="password"
-            name="password"
-            id="password-input"
-            placeholder="Password"
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-      <p>New here? <a href="signup.html">Create an Account</a></p>
-    </div>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.3.2/jsencrypt.min.js"></script>
+  <script type="text/javascript" src="validation.js" defer></script>
+</head>
+<body>
+  <div class="wrapper">
+    <h1>Login</h1>
+    <p id="error-message"></p>
+    <form id="form">
+      <div>
+        <label for="email-input">
+          <span>@</span>
+        </label>
+        <input type="email" name="email" id="email-input" placeholder="Email">
+      </div>
+      <div>
+        <label for="password-input">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240Zm240-200q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80Z"/></svg>
+        </label>
+        <input type="password" name="password" id="password-input" placeholder="Password">
+      </div>
+      <button type="submit" onclick="formSubmit()">Login</button>
+      <p style="padding:20px;">New here? <a href="signup.html">Create an Account</a></p>
+    </form>
+    <script>
+      async function formSubmit() {
+        console.log('form event submit');
+        event.preventDefault();
+        const email = document.getElementById('email-input').value;
+        const password = document.getElementById('password-input').value;
+        if (!email) {
+          console.log("email empty")
+          document.getElementById('email-input').style.borderColor = "red";
+        }
+        if (!password) {
+          console.log("pass empty")
+          document.getElementById('password-input').style.borderColor = "red";
+        }
+        if(!email || !password){
+          console.log("Invalid entries")
+          return;
+        }
+        // Encrypt the password using the public key
+        const encrypt = new JSEncrypt();
+        encrypt.setPublicKey("-----BEGIN RSA PUBLIC KEY-----MIIBCgKCAQEAqy3b5RNVsvXkDOfFpZbWx5Ebw1BTMQVJ9LHQ8mhZzn8G5bBQkyKVHdfow0Pfg6zA/QTQGVynQvKQHiTNkiKn3Q6L8FEl4wr868AmhKSoWqCn19n9SFudc4oP3hbw/QTeqG+r0Vn7rjlm8AfUo2ZTvWUIgIJTkG4V3ghJwBF0p3U3h3Px+R7zqrmDnzXpZQfyrI+adoPgZ/hE46HfH8B1wNA0S2KhICwGZ9TSKzBSdnbVuzF0uSyXfPl1AQuZzA9N8shDX2e7qwNQjMuJhuB+xwnHieNYwMrf2+BU8HXPdkGXm0//+HO0fIgCtj7ZZBRyYUxniIGcRsnINnmqedYY6wIDAQAB-----END RSA PUBLIC KEY-----");
+        const encryptedPassword = encrypt.encrypt(password);
+        // Create the payload
+        const payload = {
+          email: email,
+          password: encryptedPassword
+        };
+        // Send the POST request
+        const response = await fetch('https://127.0.0.1:8081/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        }).then(response => response.json())
+            .then(data => {
+              console.log(data);
+              if (data.message === "Login request was successful!") {
+                alert('login was successful')
+                window.location.href = "/";
+              }
+            }).catch(error => console.error("Error:", error));
+        }
+      </script>
+  </div>
+</body>
 </html>
 
 <!--References-->

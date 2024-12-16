@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Signup</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.3.2/jsencrypt.min.js"></script>
   <script type="text/javascript" src="validation.js" defer></script>
 </head>
 <body>
@@ -14,9 +15,15 @@
     <form id="form">
       <div>
         <label for="firstname-input">
-          <svg xmlns="https://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z"/></svg>
         </label>
         <input type="text" name="firstname" id="firstname-input" placeholder="Firstname">
+      </div>
+      <div>
+        <label for="lastname-input">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z"/></svg>
+        </label>
+        <input type="text" name="lastname" id="lastname-input" placeholder="Lastname">
       </div>
       <div>
         <label for="email-input">
@@ -26,19 +33,97 @@
       </div>
       <div>
         <label for="password-input">
-          <svg xmlns="https://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240Zm240-200q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240Zm240-200q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80Z"/></svg>
         </label>
         <input type="password" name="password" id="password-input" placeholder="Password">
       </div>
       <div>
         <label for="repeat-password-input">
-          <svg xmlns="https://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240Zm240-200q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240Zm240-200q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80Z"/></svg>
         </label>
         <input type="password" name="repeat-password" id="repeat-password-input" placeholder="Repeat Password">
       </div>
-      <button type="submit">Signup</button>
+      <button type="submit" onclick="formSubmit()">Signup</button>
+	  <p style="padding:20px;">Already have an Account? <a href="login.html">login</a> </p>
     </form>
-    <p>Already have an Account? <a href="login.html">login</a> </p>
+	<script>
+    async function formSubmit() {
+      console.log('form event submit');
+      event.preventDefault();
+      const firstname = document.getElementById('firstname-input').value;
+      const lastname = document.getElementById('lastname-input').value;
+      const email = document.getElementById('email-input').value;
+      const password = document.getElementById('password-input').value;
+			const repeatedpassword = document.getElementById('repeat-password-input').value;
+      if (!firstname) {
+        console.log("fname empty");
+        document.getElementById('firstname-input').style.borderColor = "red";
+      }
+      if (!lastname) {
+        console.log("lname empty");
+        document.getElementById('lastname-input').style.borderColor = "red";
+      }
+      if (!email) {
+        console.log("email empty");
+        document.getElementById('email-input').style.borderColor = "red";
+      }
+      if (!password) {
+        console.log("pass empty");
+        document.getElementById('password-input').style.borderColor = "red";
+      }
+			if (!repeatedpassword) {
+        console.log("rpass empty");
+        document.getElementById('repeat-password-input').style.borderColor = "red";
+      }
+			if(!firstname || !lastname || !email || !password || !repeatedpassword){
+				console.log("Invalid entries");
+				return;
+			}
+      if (password.length < 6) {
+        console.log("password less than 6!")
+        alert("Password must be longer than 6 character!");
+        return;
+      }
+			if (password !== repeatedpassword) {
+				console.log("passwords do not match")
+				document.getElementById('password-input').style.borderColor = "red";
+				document.getElementById('repeat-password-input').style.borderColor = "red";
+				return;
+			}
+      // Encrypt the password using the public key
+      const encrypt = new JSEncrypt();
+      encrypt.setPublicKey("-----BEGIN RSA PUBLIC KEY-----MIIBCgKCAQEAqy3b5RNVsvXkDOfFpZbWx5Ebw1BTMQVJ9LHQ8mhZzn8G5bBQkyKVHdfow0Pfg6zA/QTQGVynQvKQHiTNkiKn3Q6L8FEl4wr868AmhKSoWqCn19n9SFudc4oP3hbw/QTeqG+r0Vn7rjlm8AfUo2ZTvWUIgIJTkG4V3ghJwBF0p3U3h3Px+R7zqrmDnzXpZQfyrI+adoPgZ/hE46HfH8B1wNA0S2KhICwGZ9TSKzBSdnbVuzF0uSyXfPl1AQuZzA9N8shDX2e7qwNQjMuJhuB+xwnHieNYwMrf2+BU8HXPdkGXm0//+HO0fIgCtj7ZZBRyYUxniIGcRsnINnmqedYY6wIDAQAB-----END RSA PUBLIC KEY-----");
+      const encryptedPassword = encrypt.encrypt(password);
+      // Create the payload
+      const payload = {
+        firstname: firstname,
+        lastname:lastname,
+        email: email,
+        password: encryptedPassword
+      };
+      // Send the POST request
+      const response = await fetch('https://127.0.0.1:8081/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      }).then(response => response.json())
+        .then(data => {
+          console.log(data);
+            if (data.message === "Signup request was successful!") {
+              alert('signup was successful! you have been logged in');
+              window.location.href = "/";
+            }
+            if (data.message === "this user already exists, cannot register") {
+              alert('Cannot register, user already exists!');
+              return;
+            }
+        }).catch(error => { 
+          console.error("Error:", error);
+        });
+    }
+    </script>
   </div>
 </body>
 </html>

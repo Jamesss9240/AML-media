@@ -23,19 +23,22 @@ type JSONUserRegistration struct {
 	Password  string `json:"password" binding:"required"`
 }
 
-func showLoginPage(c *gin.Context) {
-	Render(c, gin.H{"title": "AML - Login"}, "login.html")
-}
+// func showLoginPage(c *gin.Context) {
+// 	Render(c, gin.H{"title": "AML - Login"}, "login.html")
+// }
 
-func showSignupPage(c *gin.Context) {
-	Render(c, gin.H{"title": "AML - Signup"}, "signup.html")
-}
+// func showSignupPage(c *gin.Context) {
+// 	Render(c, gin.H{"title": "AML - Signup"}, "signup.html")
+// }
 
-func ShowIndexPage(c *gin.Context) {
-	Render(c, gin.H{"title": "AML - Home"}, "index.html")
-}
+// func ShowIndexPage(c *gin.Context) {
+// 	Render(c, gin.H{"title": "AML - Home"}, "index.html")
+// }
 
 func performLogin(c *gin.Context) {
+	// Add CORS headers
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, OPTIONS")
 	log.Debug("peformlogin")
 	var JUL = new(JSONUserLogin)
 	// Obtain the form values by POST
@@ -43,9 +46,8 @@ func performLogin(c *gin.Context) {
 	if err != nil {
 		c.Set("authenticated", false)
 		log.Error("Error binding JSON", zap.Error(err))
-		c.HTML(http.StatusBadRequest, "loginnew.html", gin.H{
-			"ErrorTitle":   "Login Failed",
-			"ErrorMessage": "Invalid Request",
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
 		})
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
@@ -55,9 +57,8 @@ func performLogin(c *gin.Context) {
 	if !ValidateEmail(JUL.Email) {
 		c.Set("authenticated", false)
 		log.Error("Invalid email", zap.Error(err))
-		c.HTML(http.StatusBadRequest, "loginnew.html", gin.H{
-			"ErrorTitle":   "Login Failed",
-			"ErrorMessage": "Error invalid email",
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
 		})
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
@@ -68,17 +69,15 @@ func performLogin(c *gin.Context) {
 		c.Set("authenticated", false)
 		if err.Error() == auth.ErrNoPasswordProvided {
 			log.Error("No password provided", zap.Error(err))
-			c.HTML(http.StatusBadRequest, "loginnew.html", gin.H{
-				"ErrorTitle":   "Login Failed",
-				"ErrorMessage": "Password not provided",
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
 			})
 			c.AbortWithStatus(http.StatusBadRequest)
 			return
 		}
 		log.Error("Error decrypting password", zap.Error(err))
-		c.HTML(http.StatusBadRequest, "loginnew.html", gin.H{
-			"ErrorTitle":   "Login Failed",
-			"ErrorMessage": "Error while parsing password",
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
 		})
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
@@ -89,36 +88,35 @@ func performLogin(c *gin.Context) {
 		c.Set("authenticated", false)
 		if err.Error() == auth.ErrNoEmailProvided {
 			log.Error("No email provided", zap.Error(err))
-			c.HTML(http.StatusBadRequest, "loginnew.html", gin.H{
-				"ErrorTitle":   "Login Failed",
-				"ErrorMessage": "No email provided",
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
 			})
 			c.AbortWithStatus(http.StatusBadRequest)
 			return
 		}
 		if err.Error() == auth.ErrNoPasswordProvided {
 			log.Error("No password provided", zap.Error(err))
-			c.HTML(http.StatusBadRequest, "loginnew.html", gin.H{
-				"ErrorTitle":   "Login Failed",
-				"ErrorMessage": "No password provided",
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
 			})
 			c.AbortWithStatus(http.StatusBadRequest)
 			return
 		}
 		log.Error("Could not login user", zap.Error(err))
-		c.HTML(http.StatusBadRequest, "loginnew.html", gin.H{
-			"ErrorTitle":   "Login Failed",
-			"ErrorMessage": "Invalid credentials provided",
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
 		})
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
-	}
-	// I am aware this statement is kinda redundant but in terms of authentication you can never be too safe, unless you're using a million bit keys and 5 layers of enecryption for some godforsaken reason
-	if token != "" && err == nil {
-		log.Info("Form data", zap.String("email", JUL.Email), zap.String("password", JUL.Password))
-		c.SetCookie("token", token, 3600, "", "localhost", true, true)
-		c.Set("authenticated", true)
-		c.JSON(http.StatusOK, gin.H{"message": "Login request was successful!"})
+	} else {
+		// I am aware this statement is kinda redundant but in terms of authentication you can never be too safe
+		// unless you're using a million bit keys and 5 layers of enecryption for some godforsaken reason
+		if token != "" {
+			log.Info("Form data", zap.String("email", JUL.Email), zap.String("password", JUL.Password))
+			c.SetCookie("token", token, 3600, "", "localhost", true, true)
+			c.Set("authenticated", true)
+			c.JSON(http.StatusOK, gin.H{"message": "Login request was successful!"})
+		}
 	}
 }
 
@@ -139,6 +137,8 @@ func performLogout(c *gin.Context) {
 }
 
 func performSignup(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, OPTIONS")
 	if t, err := c.Cookie("token"); err == nil {
 		v, _ := auth.CheckJWT(t)
 		if v {
@@ -160,9 +160,8 @@ func performSignup(c *gin.Context) {
 	if err != nil {
 		c.Set("authenticated", false)
 		log.Error("Error binding JSON", zap.Error(err))
-		c.HTML(http.StatusBadRequest, "signup.html", gin.H{
-			"ErrorTitle":   "Signup Failed",
-			"ErrorMessage": "Invalid Request",
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
 		})
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
@@ -171,9 +170,8 @@ func performSignup(c *gin.Context) {
 	if ok := ValidateEmail(JUR.Email); !ok {
 		c.Set("authenticated", false)
 		log.Error("Invalid email")
-		c.HTML(http.StatusBadRequest, "signup.html", gin.H{
-			"ErrorTitle":   "Registration Failed",
-			"ErrorMessage": "Invalid email",
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
 		})
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
@@ -181,9 +179,8 @@ func performSignup(c *gin.Context) {
 	if ok := ValidateName(JUR.FirstName); !ok {
 		c.Set("authenticated", false)
 		log.Error("Invalid firstname")
-		c.HTML(http.StatusBadRequest, "signup.html", gin.H{
-			"ErrorTitle":   "Registration Failed",
-			"ErrorMessage": "First name invalid",
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
 		})
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
@@ -191,9 +188,8 @@ func performSignup(c *gin.Context) {
 	if ok := ValidateName(JUR.LastName); !ok {
 		c.Set("authenticated", false)
 		log.Error("invalid lastname")
-		c.HTML(http.StatusBadRequest, "signup.html", gin.H{
-			"ErrorTitle":   "Registration Failed",
-			"ErrorMessage": "Last name invalid",
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
 		})
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
@@ -203,24 +199,22 @@ func performSignup(c *gin.Context) {
 		c.Set("authenticated", false)
 		if err.Error() == auth.ErrNoPasswordProvided {
 			log.Error("No password provided", zap.Error(err))
-			c.HTML(http.StatusBadRequest, "loginnew.html", gin.H{
-				"ErrorTitle":   "Login Failed",
-				"ErrorMessage": "Password not provided",
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
 			})
 			c.AbortWithStatus(http.StatusBadRequest)
 			return
 		}
 		log.Error("Error decrypting password", zap.Error(err))
-		c.HTML(http.StatusBadRequest, "loginnew.html", gin.H{
-			"ErrorTitle":   "Login Failed",
-			"ErrorMessage": "Error while parsing password",
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
 		})
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 	hashedPassword := auth.BcryptPassword(decryptedpassword)
 	if err := db.CDBRegisterUser(JUR.Email, JUR.FirstName, JUR.LastName, hashedPassword); err == nil {
-		token, err := auth.GenerateSessionToken(JUR.Email)
+		token, err := auth.GenerateSessionToken(JUR.Email, "member")
 		if err != nil {
 			c.SetCookie("token", "", -1, "", "localhost", true, true)
 			c.Set("authenticated", false)
@@ -237,50 +231,14 @@ func performSignup(c *gin.Context) {
 	} else {
 		c.Set("authenticated", false)
 		log.Error("Error registering", zap.Error(err))
-		c.HTML(http.StatusInternalServerError, "signup.html", gin.H{
-			"ErrorTitle":   "Signup Failed",
-			"ErrorMessage": "We was unable to signup your account, please try again",
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
 		})
+		// c.HTML(http.StatusInternalServerError, "signup.html", gin.H{
+		// 	"ErrorTitle":   "Signup Failed",
+		// 	"ErrorMessage": "We was unable to signup your account, please try again",
+		// })
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
-}
-
-// Demoted to the bottom, not important but the code could be reused
-func showPersonalDetails(c *gin.Context) {
-	// token, err := c.Cookie("token") // Get token cookie
-	// if err != nil {
-	// 	log.Println(err)
-	// 	c.HTML(http.StatusBadRequest, "login.html", gin.H{
-	// 		"ErrorTitle":   "Login Failed",
-	// 		"ErrorMessage": "Invalid credentials provided",
-	// 	})
-	// 	return
-	// }
-	// MID, err := db.QueryMemberIDByToken(token) // Get member ID by token
-	// if err != nil {
-	// 	c.HTML(http.StatusBadRequest, "login.html", gin.H{
-	// 		"ErrorTitle":   "Login Failed",
-	// 		"ErrorMessage": "Invalid credentials provided",
-	// 	})
-	// 	return
-	// }
-	// M, err := db.QueryMemberInfoByID(MID) // Get Member row by ID
-	// if err != nil {
-	// 	c.HTML(http.StatusBadRequest, "login.html", gin.H{
-	// 		"ErrorTitle":   "Login Failed",
-	// 		"ErrorMessage": "Invalid credentials provided",
-	// 	})
-	// 	return
-	// }
-	Render(c, gin.H{
-		// "fname": M.FirstName,
-		// "lname": M.LastName,
-		// "email": M.Email,
-		// "date":  M.DateOfBirth,
-		"fname": "Unavailable",
-		"lname": "Unavailable",
-		"email": "Unavailable",
-		"date":  "Unavailable",
-	}, "personal-details.html")
 }

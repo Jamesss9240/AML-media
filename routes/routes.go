@@ -10,28 +10,12 @@ import (
 var log = logaml.Log
 
 func InitialiseRoutes(router *gin.Engine) {
-	router.Use(auth.SetUserStatus())
-	router.GET("/", ShowIndexPage)   // Handle the index route
-	userRoutes := router.Group("/u") // User group
-	{
-		// userRoutes.GET("/login", auth.EnsureNotLoggedIn(), showLoginPage)
-		// userRoutes.POST("/login", auth.EnsureNotLoggedIn(), performLogin)
-		userRoutes.GET("/login", auth.EnsureNotLoggedIn(), showLoginPage)
-		userRoutes.POST("/login", auth.EnsureNotLoggedIn(), performLogin)
-		userRoutes.GET("/logout", auth.EnsureAuthenticatedLoggedIn(), performLogout)
-		userRoutes.GET("/signup", auth.EnsureNotLoggedIn(), showSignupPage)
-		// userRoutes.GET("/register", auth.EnsureNotLoggedIn(), showNewRegistrationPage)
-		userRoutes.POST("/signup", auth.EnsureNotLoggedIn(), performSignup)
-		// userRoutes.GET("/personal-details", auth.EnsureAuthenticatedLoggedIn(), showPersonalDetails)
-		// userRoutes.POST("/personal-details", auth.EnsureAuthenticatedLoggedIn(), updatePersonalDetails)
-		// userRoutes.GET("/profile", auth.EnsureAuthenticatedLoggedIn(), showProfile)
-	}
-	// logRoutes := router.Group("/personal-log") // log group
-	//
-	//	{
-	//		logRoutes.GET("/view", auth.EnsureAuthenticatedLoggedIn(), ShowLogs)
-	//		logRoutes.GET("/view/:log_id", auth.EnsureAuthenticatedLoggedIn(), GetLog)
-	//		logRoutes.GET("/create", auth.EnsureAuthenticatedLoggedIn(), ShowLogCreationPage)
-	//		logRoutes.POST("/create", auth.EnsureAuthenticatedLoggedIn(), CreateLog)
-	//	}
+	// router.Use(auth.SetUserStatus())
+	// router.GET("/", ShowIndexPage)   // Handle the index route
+	// router.GET("/login", auth.EnsureNotLoggedIn(), showLoginPage)
+	router.POST("/login", auth.EnsureNotLoggedIn(), performLogin)
+	router.GET("/logout", auth.EnsureAuthenticatedLoggedIn(), performLogout)
+	// router.GET("/signup", auth.EnsureNotLoggedIn(), showSignupPage)
+	router.POST("/signup", auth.EnsureNotLoggedIn(), performSignup)
+	// router.POST("/verify", verify)
 }

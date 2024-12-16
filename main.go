@@ -3,6 +3,7 @@
 package main
 
 import (
+	"AML/auth"
 	"AML/console"
 	"AML/db"
 	"AML/logaml"
@@ -19,19 +20,17 @@ var router *gin.Engine
 var log = logaml.Log
 
 func main() {
-	db.CDBGetUserByEmail("user@example.com")
+	db.CDBCheck()
 	// Set Gin to production mode
-	gin.SetMode(gin.DebugMode)
+	gin.SetMode(gin.ReleaseMode)
 	router = gin.Default() // This implements a recovery function so panics do not get logged and does not crash!
 	// Process the templates at the start so that they don't have to be loaded
 	// from the disk again. This makes serving HTML pages very fast.
 	router.LoadHTMLGlob("templates/*")
 	router.Static("/static", "./static/")
 	router.StaticFile("/favicon.ico", "./static/favicon.ico")
-	// s.Use(func(ctx *gin.Context) {
-	// 	ctx.
-	// })
 	routes.InitialiseRoutes(router)
+	router.Use(auth.CORSMiddleware())
 	router.NoRoute(func(c *gin.Context) {
 		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
 	})
@@ -39,16 +38,10 @@ func main() {
 		c.String(http.StatusOK, "Post request was successful!")
 	})
 	// Start serving the application
-	// go router.Run("127.0.0.1:8080")
-	go router.RunTLS("127.0.0.1:8080", "./cert.pem", "./mykey.pem")
+	go router.RunTLS("127.0.0.1:8081", "./aml-media/main/certificates/cert.pem", "./aml-media/main/certificates/key.pem")
 	go console.Console()
 	console.Shutdown = make(chan os.Signal, 1)
 	signal.Notify(console.Shutdown, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 	<-console.Shutdown
 	println("Starting Shutdown")
-	// err = db.DeleteAllTokens()
-	// if err != nil {
-	// 	log.Println(err)
-	// 	panic(err)
-	// }
 }
