@@ -85,7 +85,9 @@ function displayBooks(books) {
   }
 }
 
+//references
 //https://stackoverflow.com/questions/44690171/how-do-i-go-about-giving-objects-in-arrays-their-properties
+//https://github.com/pembawa/Books-Library-System/blob/4ef3b5774e3c1824476de79165e4aecb9379569e/script.js
 //https://www.w3schools.com/js/js_objects.asp
 //https://www.w3schools.com/js/js_arrays.asp
 //Help from family member with javascript
