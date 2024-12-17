@@ -61,7 +61,7 @@ func EnsureNotLoggedIn() gin.HandlerFunc {
 		}
 		t, err := c.Cookie("token")
 		if err != nil {
-			log.Error("Error getting cookie, not authenticated", zap.Error(err))
+			// log.Error("Error getting cookie, not authenticated", zap.Error(err))
 			c.Set("authenticated", false)
 		} else {
 			if valid, err := CheckJWT(t); err != nil {
