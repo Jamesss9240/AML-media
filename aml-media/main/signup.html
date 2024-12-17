@@ -113,7 +113,15 @@
           console.log(data);
             if (data.message === "Signup request was successful!") {
               alert('signup was successful! you have been logged in');
-              window.location.href = "/";
+              // Set a secure cookie
+          			// Get the current date and time
+			          let now = new Date();
+                // Set the expiration time to one hour from now
+                now.setTime(now.getTime() + (1 * 60 * 60 * 1000));
+                // Convert the expiration time to a UTC string
+                let expires = now.toUTCString();
+                document.cookie = "token="+data.token+"; expires="+expires+"; domain=127.0.0.1; Secure;";
+                window.location.href = "/";
             }
             if (data.message === "this user already exists, cannot register") {
               alert('Cannot register, user already exists!');
