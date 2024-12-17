@@ -148,7 +148,7 @@
             updatePagination(data.totalPages, page);
           } catch (error) {
             console.error('Error loading user media:', error);
-            alert('Failed to load user media');
+            alert('Error, you may not be authorised to do this, please create an account or login');
           }
         }
         async function returnMedia(mediaId) {
@@ -194,7 +194,7 @@
             }
           } catch (error) {
             console.error('Return error:', error);
-            alert('Failed to return media.');
+            alert('Error, you may not be authorised to do this, please create an account or login');
           }
         }
 
@@ -216,11 +216,11 @@
               console.log('Borrow success'); 
               loadMedia(''); 
             } else {
-              alert('Borrow failed.');
+              alert('Error, you may not be authorised to do this, please create an account or login.');
             }
           } catch (error) {
             console.error('Borrow error:', error);
-            alert('Borrow failed.');
+            alert('Error, you may not be authorised to do this, please create an account or login.');
           }
         }
 
