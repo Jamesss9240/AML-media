@@ -75,7 +75,7 @@
                 now.setTime(now.getTime() + (1 * 60 * 60 * 1000));
                 // Convert the expiration time to a UTC string
                 let expires = now.toUTCString();
-                document.cookie = "token="+data.token+"; expires="+expires+"; domain=127.0.0.1; Secure; HttpOnly";
+                document.cookie = "token="+data.token+"; expires="+expires+"; domain=127.0.0.1; Secure;";
                 window.location.href = "/";
               }
             }).catch(error => console.error("Error:", error));

@@ -107,13 +107,19 @@
           }
         }
 
-        async function loadUserMedia(userId, page = 1) {
+        async function loadUserMedia(page = 1) {
           try {
-            const response = await fetch(`https://127.0.0.1:3000/fetch-media/?page=${page}&limit=${itemsPerPage}`);
+            const response = await fetch(`https://127.0.0.1:3000/user/user_media/?page=${page}&limit=${itemsPerPage}`, {
+              method: 'GET',
+              credentials: 'include',
+              headers: {
+          'Content-Type': 'application/json'
+              }
+            });
             const data = await response.json();
-            
+
             const mediaContainer = document.getElementById('media-container');
-            mediaContainer.innerHTML = ''; 
+            mediaContainer.innerHTML = '';
 
             if (!data.rows || data.rows.length === 0) {
               const mediaElement = document.createElement('div');
@@ -122,6 +128,7 @@
               mediaContainer.appendChild(mediaElement);
               return;
             }
+
 
             data.rows.forEach(row => {
               const media = row.value;
@@ -133,7 +140,7 @@
                   <p>${media.description}</p>
                   <p>Return Date: ${returnDate}</p>
                   <img src="${media.url}" alt="${media.title}" />
-                  <button class="return-button" onclick="returnMedia('${row.id}', '${userId}')">Return Media</button>
+                  <button class="return-button" onclick="returnMedia('${row.id}')">Return Media</button>
                 `;
               mediaContainer.appendChild(mediaElement);
             });
@@ -144,44 +151,43 @@
             alert('Failed to load user media');
           }
         }
-
-        async function returnMedia(mediaId, userId) {
+        async function returnMedia(mediaId) {
           try {
             const response = await fetch(`https://127.0.0.1:3000/return/return_media`, {
               method: 'POST',
+              credentials: 'include',
               headers: {
-                'Content-Type': 'application/json'
+          'Content-Type': 'application/json'
               },
-              body: JSON.stringify({ mediaId: mediaId, userId: userId })
+              body: JSON.stringify({ mediaId: mediaId})
             });
 
             const data = await response.json();
 
             if (data.success) {
               alert('Return success.');
-              //return success message, log allows puppeteer testing to read it easily
               console.log('Return success');
-              
+              loadUserMedia();
+
               const dateNow = Math.floor(Date.now() / 1000);
-              
-              loadUserMedia(userId); 
               if (data.returnDate < dateNow) {
-                try {
-                  const lateResponse = await fetch(`https://127.0.0.1:3000/return/late_return`, {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ mediaId: mediaId, userId: userId })
-                  });
-                  const lateData = await lateResponse.json();
-                 
-                  if (lateData.success) {
-                    alert('Late return processed.');
-                  }
-                } catch (error) {
-                  console.error('Late return error:', error);
-                }
+          try {
+            const lateResponse = await fetch(`https://127.0.0.1:3000/return/late_return`, {
+              method: 'POST',
+              credentials: 'include',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ mediaId: mediaId })
+            });
+            const lateData = await lateResponse.json();
+
+            if (lateData.success) {
+              alert('Late return processed.');
+            }
+          } catch (error) {
+            console.error('Late return error:', error);
+          }
               }
             } else {
               alert('Return failed.');
@@ -242,12 +248,12 @@
           currentPage = page;
           if (view === 'user_media') {
             
-              const userId = 2;
-              if (userId) {
-                loadUserMedia(userId, page);
+             
+             
+              loadUserMedia(page);
               
             }
-          } else {
+           else {
             loadMedia(view === 'all_media' ? '' : view, page);
           }
         }
@@ -255,10 +261,9 @@
         async function toggleUserMediaView() {
           
           
-            const userId = 2;
-            if (userId) {
-              loadUserMedia(userId);
-            }
+         
+              loadUserMedia();
+            
           }
         
 

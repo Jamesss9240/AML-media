@@ -29,10 +29,6 @@
   },
   "dependencies": {
     "cookie-parser": "^1.4.7",
-<<<<<<< HEAD
-    "debug": "^4.4.0",
-=======
->>>>>>> f68bd7c024a233b515acb7d61e324b14a4330848
     "esm": "^3.2.25",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",

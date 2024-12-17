@@ -21,13 +21,15 @@ const (
 var log = logaml.Log
 
 type User struct {
-	ID        string `json:"_id"`
-	REV       string `json:"_rev"`
-	Email     string `json:"email"`
-	FirstName string `json:"firstname"`
-	LastName  string `json:"lastname"`
-	Password  string `json:"password"`
-	Role      string `json:"role"`
+	ID          string          `json:"_id"`
+	REV         string          `json:"_rev"`
+	Email       string          `json:"email"`
+	FirstName   string          `json:"firstname"`
+	LastName    string          `json:"lastname"`
+	Password    string          `json:"password"`
+	LateReturns string          `json:"late_returns"`
+	MediaIDs    [][]interface{} `json:"media_ids"`
+	Role        string          `json:"role"`
 }
 
 func CDBCheck() {
@@ -65,7 +67,7 @@ func CDBGetUserByEmail(email string) (*User, error) {
 			return nil, err
 		}
 		log.Sugar().Info("Found document: ", TU)
-		log.Sugar().Info("ID: ", TU.ID, " FirstName: ", TU.FirstName, " LastName: ", TU.LastName, " Email: ", TU.Email, " Password: ", TU.Password, " Role: ", TU.Role)
+		log.Sugar().Info("ID: ", TU.ID, " FirstName: ", TU.FirstName, " LastName: ", TU.LastName, " Email: ", TU.Email, " Password: ", TU.Password, " Role: ", TU.Role, " LateReturns: ", TU.LateReturns, " MediaIDs: ", TU.MediaIDs)
 		return TU, nil
 	}
 	if rows.Err() != nil {
@@ -92,11 +94,13 @@ func CDBRegisterUser(email, firstname, lastname, password string) error {
 	}
 
 	doc := map[string]interface{}{
-		"email":     email,
-		"firstname": firstname,
-		"lastname":  lastname,
-		"password":  password,
-		"role":      "member",
+		"email":        email,
+		"firstname":    firstname,
+		"lastname":     lastname,
+		"password":     password,
+		"role":         "member",
+		"late_returns": "0",
+		"media_ids":    [][]interface{}{},
 	}
 	docid, rev, err := db.CreateDoc(context.TODO(), doc)
 	if err != nil {

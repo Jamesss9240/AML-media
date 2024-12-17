@@ -10,7 +10,7 @@ const userService = require('./proxy/userService');
 const borrowService = require('./proxy/borrowService');
 const returnService = require('./proxy/returnService');
 const searchService = require('./proxy/searchService');
-const loadmediaService = require('./proxy/loadmediaService');
+
 
 const app = express();
 const port = 3000;
@@ -64,7 +64,7 @@ app.use('/user', userService);
 app.use('/borrow', borrowService);
 app.use('/return', returnService);
 app.use('/search', searchService);
-app.use('/fetch-media', loadmediaService);
+
 
 //http -> https 
 app.use((req, res, next) => {
