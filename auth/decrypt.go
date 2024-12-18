@@ -35,27 +35,27 @@ import (
 
 // Load key file path and read
 func loadPrivateKeyFromEnvFromFile() (*rsa.PrivateKey, error) {
-	filePath, e := os.LookupEnv("AML_PK")
-	if !e {
-		return nil, errors.New("env variable not found")
+	// filePath, e := os.LookupEnv("AML_PK")
+	// if !e {
+	// 	return nil, errors.New("env variable not found")
+	// }
+	// if filePath != "" {
+	privateKeyBytes, err := os.ReadFile("./mykey.pem") //os.Getenv("AML_PK"))
+	if err != nil {
+		return nil, err
 	}
-	if filePath != "" {
-		privateKeyBytes, err := os.ReadFile(os.Getenv("AML_PK"))
-		if err != nil {
-			return nil, err
-		}
-		block, _ := pem.Decode(privateKeyBytes)
-		if block == nil || block.Type != "RSA PRIVATE KEY" {
-			return nil, fmt.Errorf("failed to decode PEM block containing private key")
-		}
-		privateKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
-		if err != nil {
-			return nil, err
-		}
-		return privateKey, nil
-	} else {
-		return nil, errors.New("filepath empty")
+	block, _ := pem.Decode(privateKeyBytes)
+	if block == nil {
+		return nil, fmt.Errorf("failed to decode PEM block containing private key")
 	}
+	privateKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	if err != nil {
+		return nil, err
+	}
+	return privateKey, nil
+	// } else {
+	// 	return nil, errors.New("filepath empty")
+	// }
 }
 
 // Load key from env
