@@ -225,9 +225,9 @@ func performSignup(c *gin.Context) {
 			c.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
-		c.SetCookie("token", token, 3600, "", "localhost", true, true)
+		// c.SetCookie("token", token, 3600, "", "localhost", true, true)
 		c.Set("authenticated", true)
-		c.JSON(http.StatusOK, gin.H{"message": "Signup request was successful!"})
+		c.JSON(http.StatusOK, gin.H{"message": "Signup request was successful!", "token": token})
 	} else {
 		c.Set("authenticated", false)
 		log.Error("Error registering", zap.Error(err))
